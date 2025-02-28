@@ -21,7 +21,15 @@ export class LoginPageComponent implements OnInit {
   signningIn: boolean = false;
 
   login(): void {
+    this.signningIn = true;
 
+    this.authService.login(this.username, this.password).subscribe(() => {
+      alert("Login successful");
+      this.signningIn = false;
+    }, (error) => {
+      alert("Login failed");
+      this.signningIn = false;
+    });
   }
 
   onFogotPasswordClick(): void {
