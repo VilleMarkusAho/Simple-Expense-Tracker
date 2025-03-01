@@ -1,9 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Sqlite;
 using DAL;
-using DAL.Repositories;
-using DAL.Models;
 using Microsoft.Data.Sqlite;
 using System.Data;
 
@@ -23,7 +18,7 @@ sqliteConnection.Open();
 
 // Register repositories
 builder.Services.AddSingleton<IDbConnection>(sqliteConnection);
-builder.Services.AddSingleton<IRepository<User>, UserRepository>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -49,7 +44,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     // Initialize Repositories and create tables
-    var userRepository = scope.ServiceProvider.GetRequiredService<IRepository<User>>();
+    var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
     await userRepository.CreateTable();
 }
 

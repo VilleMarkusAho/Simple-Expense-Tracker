@@ -15,4 +15,8 @@
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,14 +1,20 @@
-﻿using DAL.Models;
-using Microsoft.Extensions.Configuration;
-using Dapper;
+﻿using Microsoft.Extensions.Configuration;
 using System.Data;
+using Dapper;
+using Models;
 
-namespace DAL.Repositories
+namespace DAL
 {
-    public class UserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<User>
+    {
+        Task<User?> GetUser(string username, string password);
+    }
+
+    public class UserRepository : IUserRepository
     {
         private readonly IDbConnection _connection;
         private readonly IConfiguration _configuration;
+        private readonly int _defaultWorkFactor = 13;
 
         public UserRepository(IDbConnection connection, IConfiguration configuration)
         {
@@ -39,6 +45,15 @@ namespace DAL.Repositories
             await AddAsync(defaultUser);
         }
 
+        public Task<User?> GetUser(string username, string password) 
+        {
+            string query = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
+
+            password = BCrypt.Net.BCrypt.HashPassword(password, _defaultWorkFactor);
+
+            return _connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username, Password = password });
+        }
+
         public async Task<User?> GetByIdAsync(int id)
         {
             string query = "SELECT * FROM Users WHERE UserId = @id";
@@ -55,17 +70,12 @@ namespace DAL.Repositories
 
             // Hash the password before storing it for security
             // Using 13 as the work factor is a good balance between security and performance
-            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, 13);
+            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, _defaultWorkFactor);
 
             int userId = await _connection.ExecuteScalarAsync<int>(query, entity);
 
             entity.UserId = userId;
             return entity;
-        }
-
-        public Task<IEnumerable<User>> GetAllAsync()
-        {
-            throw new NotImplementedException();
         }
 
         public Task<User> DeleteAsync(int id)
