@@ -65,6 +65,8 @@ sqliteConnection.Open();
 builder.Services.AddSingleton<IDbConnection>(sqliteConnection);
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
+builder.Services.AddTransient<IUserHelper, UserHelper>();
+
 // Register application services
 builder.Services.AddScoped<IAuthService, AuthService>();
 

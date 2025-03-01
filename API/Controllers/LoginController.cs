@@ -1,6 +1,7 @@
 ﻿using Business;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
@@ -21,11 +22,13 @@ namespace API.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserHelper _userHelper;
         private readonly int _expiryMinutes;
 
-        public LoginController(IAuthService authService, IConfiguration configuration)
+        public LoginController(IAuthService authService, IUserHelper userHelper, IConfiguration configuration)
         {
             _authService = authService;
+            _userHelper = userHelper;
             _expiryMinutes = configuration.GetValue<int>("JwtSettings:ExpiryMinutes");
 
             if (_expiryMinutes <= 0)
@@ -40,6 +43,17 @@ namespace API.Controllers
         {
             try
             {
+                // Skip login if user is already authenticated
+                if (_userHelper.IsAuthenticated(User))
+                {
+                    LoginUser? loginUser = _userHelper.GetLoginUser(User);
+
+                    if (loginUser != null)
+                    {
+                        return Ok(new { message = "Already logged in", result = loginUser });
+                    }
+                }
+
                 var loginResult = await _authService.LoginAsync(request.Username, request.Password);
 
                 if (loginResult == null)

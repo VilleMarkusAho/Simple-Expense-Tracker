@@ -19,7 +19,7 @@ namespace Business
             _configuration = configuration;
         }
 
-        public async Task<(UserWithoutPassword user, string token)?> LoginAsync(string username, string password)
+        public async Task<(LoginUser user, string token)?> LoginAsync(string username, string password)
         {
             var user = await _userRepository.GetUser(username, password);
 
@@ -29,12 +29,12 @@ namespace Business
             }
 
             // Generate JWT token
-            var token = GenerateJwtToken(user.UserId.ToString(), user.Username);
+            var token = GenerateJwtToken(user);
 
             return (user, token);
         }
 
-        private string GenerateJwtToken(string userId, string username)
+        private string GenerateJwtToken(User user)
         {
             var settings = _configuration.GetSection("JwtSettings");
             var secret = settings["Secret"] ?? throw new Exception("JWT Secret is missing in configuration");
@@ -45,10 +45,12 @@ namespace Business
 
             Claim[] claims =
             [
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.UniqueName, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique identifier for the token for preventing token replay attacks
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64) // Issued At Time
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64), // Issued At Time
+                new Claim("UserId", user.UserId.ToString()),
+                new Claim("Username", user.Username),
+                new Claim("FirstName", user.FirstName ?? ""),
+                new Claim("LastName", user.LastName ?? "")
             ];
 
             var token = new JwtSecurityToken(

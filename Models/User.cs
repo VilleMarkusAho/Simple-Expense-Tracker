@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    public class UserWithoutPassword
+    public class LoginUser
     {
         public int UserId { get; set; }
         public required string Username { get; set; }
@@ -14,7 +14,7 @@ namespace Models
         public string? LastName { get; set; }
     }
 
-    public class User : UserWithoutPassword
+    public class User : LoginUser
     {
         public required string Password { get; set; }
     }    
