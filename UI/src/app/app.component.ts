@@ -1,11 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { GlobalHeaderComponent } from './components/global-header/global-header.component';
-import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, GlobalHeaderComponent],
+  imports: [CommonModule, RouterOutlet, GlobalHeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
