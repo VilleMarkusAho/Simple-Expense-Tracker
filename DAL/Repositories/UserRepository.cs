@@ -1,52 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Models;
-using System.Data.SQLite;
+﻿using DAL.Models;
 using Microsoft.Extensions.Configuration;
+using Dapper;
+using System.Data;
 
 namespace DAL.Repositories
 {
     public class UserRepository : IRepository<User>
     {
-        private readonly SQLiteConnection _connection;
+        private readonly IDbConnection _connection;
         private readonly IConfiguration _configuration;
 
-        public UserRepository(string connectionString, IConfiguration configuration)
+        public UserRepository(IDbConnection connection, IConfiguration configuration)
         {
             _configuration = configuration;
-
-            _connection = new SQLiteConnection(connectionString);
-            _connection.Open();
-
-            CreateTable();
+            _connection = connection;
         }
 
-        private void CreateTable()
+        public async Task CreateTable()
         {
             string query = @"
                 CREATE TABLE IF NOT EXISTS Users (
                     UserId INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    Username VARCHAR(20) UNIQUE, 
-                    Password VARCHAR(32), 
-                    FirstName TEXT, 
-                    LastName TEXT";
+                    Username VARCHAR(20) UNIQUE NOT NULL, 
+                    Password VARCHAR(32) NOT NULL DEFAULT '', 
+                    FirstName TEXT NOT NULL DEFAULT '', 
+                    LastName TEXT NOT NULL DEFAULT ''
+                )";
 
-            using var cmd = new SQLiteCommand(query, _connection);
-            cmd.ExecuteNonQuery();
+            await _connection.ExecuteAsync(query);
 
-            // Seed the database with a default user
-            var defaultUser = _configuration.GetSection("EXAMPLE_USER") as User;
+            var defaultUser = _configuration.GetSection("EXAMPLE_USER").Get<User>();
 
+            if (defaultUser == null)
+            {
+                throw new Exception("No default user found in configuration");
+            }
 
-
+            await AddAsync(defaultUser);
         }
 
-        public Task<User> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            string query = "SELECT * FROM Users WHERE UserId = @id";
+
+            return await _connection.QueryFirstOrDefaultAsync<User>(query, new { id });
+        }
+
+        public async Task<User?> AddAsync(User entity)
+        {
+            string query = @"
+                INSERT INTO Users (Username, Password, FirstName, LastName) 
+                VALUES (@Username, @Password, @FirstName, @LastName);
+                SELECT last_insert_rowid();";
+
+            // Hash the password before storing it for security
+            // Using 13 as the work factor is a good balance between security and performance
+            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, 13);
+
+            int userId = await _connection.ExecuteScalarAsync<int>(query, entity);
+
+            entity.UserId = userId;
+            return entity;
         }
 
         public Task<IEnumerable<User>> GetAllAsync()
@@ -54,10 +68,6 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User> AddAsync(User entity)
-        {
-            throw new NotImplementedException();
-        }
         public Task<User> DeleteAsync(int id)
         {
             throw new NotImplementedException();
