@@ -28,7 +28,7 @@ namespace DAL
                 CREATE TABLE IF NOT EXISTS Users (
                     UserId INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Username VARCHAR(20) UNIQUE NOT NULL, 
-                    Password VARCHAR(32) NOT NULL DEFAULT '', 
+                    Password VARCHAR(100) NOT NULL DEFAULT '', 
                     FirstName TEXT NOT NULL DEFAULT '', 
                     LastName TEXT NOT NULL DEFAULT ''
                 )";
@@ -45,18 +45,27 @@ namespace DAL
             await AddAsync(defaultUser);
         }
 
-        public Task<User?> GetUser(string username, string password) 
+        public async Task<User?> GetUser(string username, string password) 
         {
-            string query = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
+            string query = "SELECT * FROM Users WHERE Username = @Username";
 
-            password = BCrypt.Net.BCrypt.HashPassword(password, _defaultWorkFactor);
+            var user = await _connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username });
 
-            return _connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username, Password = password });
+            // Verify the password using BCrypt since it's stored in a hashed format
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                return null;
+            }
+
+            // Return the user without the password for security reasons
+            user.Password = "";
+
+            return user;
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            string query = "SELECT * FROM Users WHERE UserId = @id";
+            string query = "SELECT UserId, Username, FirstName, LastName FROM Users WHERE UserId = @id";
 
             return await _connection.QueryFirstOrDefaultAsync<User>(query, new { id });
         }

@@ -1,6 +1,10 @@
 using DAL;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using System.Text;
+using Business;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +17,40 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader());
 });
 
+// Add JWT Authentication
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+
+var secret = jwtSettings["Secret"];
+
+ArgumentException.ThrowIfNullOrEmpty(secret);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// Initialize In-Memory Database Connection
 var sqliteConnection = new SqliteConnection("DataSource=:memory:");
 sqliteConnection.Open();
 
 // Register repositories
 builder.Services.AddSingleton<IDbConnection>(sqliteConnection);
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+
+// Register application services
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

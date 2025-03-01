@@ -1,24 +1,72 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Business;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
     public class LoginRequest
     {
-        public string? Username { get; set; }
-        public string? Password { get; set; }
+        [Required]
+        public required string Username { get; set; }
+
+        [Required]
+        public required string Password { get; set; }
     }
 
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LoginController : ControllerBase
     {
+        private readonly IAuthService _authService;
+        private readonly int _expiryMinutes;
+
+        public LoginController(IAuthService authService, IConfiguration configuration)
+        {
+            _authService = authService;
+            _expiryMinutes = configuration.GetValue<int>("JwtSettings:ExpiryMinutes");
+
+            if (_expiryMinutes <= 0)
+            {
+                throw new Exception("Invalid expiry minutes in configuration");
+            }
+        }
 
         [HttpPost]
-        public IActionResult Login(LoginRequest request)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            return Ok();
+            try
+            {
+                var loginResult = await _authService.LoginAsync(request.Username, request.Password);
+
+                if (loginResult == null)
+                {
+                    return Unauthorized();
+                }
+
+                var user = loginResult.Value.user;
+                var token = loginResult.Value.token;
+
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = false, // Set to true in production
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddMinutes(_expiryMinutes)
+                };
+
+                // Set token in HTTP only cookie
+                Response.Cookies.Append("access_token", token, cookieOptions);
+
+                return Ok(new { message = "Successful login", result = user });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

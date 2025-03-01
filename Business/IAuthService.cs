@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Models;
 
 namespace Business
 {
     public interface IAuthService
     {
-        public Task<>
+        Task<(UserWithoutPassword user, string token)?> LoginAsync(string username, string password);
     }
 }
