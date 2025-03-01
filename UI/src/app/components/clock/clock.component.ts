@@ -23,6 +23,9 @@ export class ClockComponent implements OnInit, OnDestroy {
 
   private updateTime() {
     const now = new Date();
-    this.time = now.toLocaleTimeString();
+    this.time = now.toLocaleTimeString('fi', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }
