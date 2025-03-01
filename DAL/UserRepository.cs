@@ -22,6 +22,7 @@ namespace DAL
             _connection = connection;
         }
 
+        // Databases needs to initialized during the application starts, since we are using an in-memory database
         public async Task CreateTable()
         {
             string query = @"
