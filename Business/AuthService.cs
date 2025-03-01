@@ -41,7 +41,7 @@ namespace Business
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
       
-            var expiryMinutes = settings.GetValue<int>("ExpiryMinutes", 30);
+            var expiryMinutes = settings.GetValue("ExpiryMinutes", 30);
 
             Claim[] claims =
             [

@@ -8,10 +8,12 @@ namespace API.Controllers
     public class AuthorizationController : ControllerBase
     {
 
-        [HttpGet("isAuthenticated")]
-        public IActionResult IsAuthorized()
+        [HttpGet("status")]
+        public IActionResult IsAuthenticated()
         {
-            return Unauthorized();
+            bool isAuthenticated = User?.Identity?.IsAuthenticated ?? false;
+
+            return Ok(isAuthenticated);
         }
     }
 }

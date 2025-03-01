@@ -11,11 +11,11 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     const url = "login";
-    return this.http.post(url, { username, password });
+    return this.http.post<{ message: string, result: object }>(url, { username, password });
   }
 
   isAuthenticated(): Observable<boolean> {
-    const url = "isAuthenticated";
+    const url = "authorization/status";
     return this.http.get<boolean>(url);
   }
 }
