@@ -21,7 +21,7 @@ export class ExpenseSpreadsheetComponent {
 
   currency: "$" | "€" = "$";
   periodType: 'weekly' | 'monthly' = 'weekly';
-  startDate = new Date();
+  startDate = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 
   expenses: IExpense[] = [
     {
