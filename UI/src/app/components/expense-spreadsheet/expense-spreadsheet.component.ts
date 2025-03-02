@@ -1,7 +1,6 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { LocalizedDatePipe } from '../../pipes/localise-date.pipe';
 import { FormsModule } from '@angular/forms';
 
 interface IExpense {
@@ -12,7 +11,7 @@ interface IExpense {
 
 @Component({
   selector: 'app-expense-spreadsheet',
-  imports: [CommonModule, FormsModule, LocalizedDatePipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './expense-spreadsheet.component.html',
   styleUrl: './expense-spreadsheet.component.scss',
   standalone: true
