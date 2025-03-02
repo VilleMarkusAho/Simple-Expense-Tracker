@@ -1,4 +1,5 @@
 ﻿using Business;
+using DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -21,20 +22,15 @@ namespace API.Controllers
     [Authorize]
     public class LoginController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IUserRepository _userRepository;
         private readonly IUserHelper _userHelper;
-        private readonly int _expiryMinutes;
+        private readonly IJWTokenService _jwtService;
 
-        public LoginController(IAuthService authService, IUserHelper userHelper, IConfiguration configuration)
+        public LoginController(IUserRepository userRepository, IUserHelper userHelper, IJWTokenService jwtService)
         {
-            _authService = authService;
+            _userRepository = userRepository;
             _userHelper = userHelper;
-            _expiryMinutes = configuration.GetValue<int>("JwtSettings:ExpiryMinutes");
-
-            if (_expiryMinutes <= 0)
-            {
-                throw new Exception("Invalid expiry minutes in configuration");
-            }
+            _jwtService = jwtService;
         }
 
         [HttpPost]
@@ -54,25 +50,24 @@ namespace API.Controllers
                     }
                 }
 
-                var loginResult = await _authService.LoginAsync(request.Username, request.Password);
+                var user = await _userRepository.GetUser(request.Username, request.Password);
 
-                if (loginResult == null)
+                if (user == null)
                 {
                     return Unauthorized();
                 }
 
-                var user = loginResult.Value.user;
-                var token = loginResult.Value.token;
+                var token = _jwtService.GenerateJwtToken(user);
 
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = false, // Set to true in production
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddMinutes(_expiryMinutes)
+                    Expires = DateTime.UtcNow.AddMinutes(_jwtService.TokenExpiryMinutes)
                 };
 
-                // Set token in HTTP only cookie
+                // Set token in HTTP-only cookie
                 Response.Cookies.Append("access_token", token, cookieOptions);
 
                 return Ok(new { message = "Successful login", result = user });
