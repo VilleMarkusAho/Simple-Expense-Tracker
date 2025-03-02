@@ -1,3 +1,4 @@
+import { LocalStorageKey, LocalStorageService } from './../../services/LocalStorage.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +17,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class LoginPageComponent {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private localStorage: LocalStorageService,
+    private router: Router
+  ) { }
 
   username: string = environment.username || "";
   password: string = environment.password || "";
@@ -30,7 +35,7 @@ export class LoginPageComponent {
     this.authService.login(this.username, this.password).subscribe({
       next: response => {
         this.waitingResponse = false;
-        localStorage.setItem("user", JSON.stringify(response.result));
+        this.localStorage.setItem(LocalStorageKey.USER, response.result);
         this.router.navigate(["/dashboard"]);
       },
       error: error => {

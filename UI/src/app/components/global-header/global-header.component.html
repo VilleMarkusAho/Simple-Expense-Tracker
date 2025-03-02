@@ -4,11 +4,9 @@
   <div class="d-flex align-items-center" style="gap: 1rem;">
     <app-clock></app-clock>
     <h5 class="date">{{ date }}</h5>
-
-    <span class="ml-4">Profile</span>
   </div>
 
   <div>
-    Settings
+    {{ user?.firstName  + ' ' + user?.lastName }}
   </div>
 </header>
