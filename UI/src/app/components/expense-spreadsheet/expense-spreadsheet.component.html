@@ -64,7 +64,7 @@
   <thead>
     <tr>
       <th>
-        <i class="fa-solid fa-plus" ></i>
+        <i class="fa-solid fa-plus" (click)="addRow()"></i>
       </th>
       <th>Category</th>
       <th>Description</th>
@@ -73,9 +73,9 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let expense of expenses">
+    <tr *ngFor="let expense of expenses; let i = index">
       <td style="width: 0;">
-        <i class="fa-solid fa-trash-can cursor-pointer"></i>
+        <i class="fa-solid fa-trash-can cursor-pointer" (click)="removeRow(i)"></i>
       </td>
       <td>{{ expense.category }}</td>
       <td>{{ expense.description }}</td>

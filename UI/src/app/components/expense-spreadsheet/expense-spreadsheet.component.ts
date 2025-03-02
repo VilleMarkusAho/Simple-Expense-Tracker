@@ -23,7 +23,15 @@ export class ExpenseSpreadsheetComponent {
   startDate = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 
   addRow(): void {
+    this.expenses.push({
+      category: "Select category",
+      description: "No description",
+      amount: 0
+    })
+  }
 
+  removeRow(index: number): void {
+    this.expenses.splice(index, 1);
   }
 
   expenses: IExpense[] = [
