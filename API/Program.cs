@@ -3,7 +3,6 @@ using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
-using StackExchange.Redis;
 using System.Text;
 using Business;
 
@@ -62,13 +61,9 @@ builder.Services.AddAuthorization();
 var sqliteConnection = new SqliteConnection("DataSource=:memory:");
 sqliteConnection.Open();
 
-// Initialize Redis
-var connectionMultiplexer = ConnectionMultiplexer.Connect("localhost:6379");
-
 // Register repositories
 builder.Services.AddSingleton<IDbConnection>(sqliteConnection);
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
 
 builder.Services.AddTransient<IUserHelper, UserHelper>();
 

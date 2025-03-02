@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models;
-using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,13 +10,11 @@ namespace Business
     public class JWTokenService : IJWTokenService
     {
         private readonly IConfiguration _configuration;
-        private readonly IDatabase _redisDb; // Redis is used for revoking tokens
         private readonly int _tokenExpiryMinutes;
 
-        public JWTokenService(IConfiguration configuration, IConnectionMultiplexer redis) 
+        public JWTokenService(IConfiguration configuration) 
         {
             _configuration = configuration;
-            _redisDb = redis.GetDatabase();
 
             _tokenExpiryMinutes = _configuration.GetValue<int>("JwtSettings:ExpiryMinutes");
 
@@ -28,27 +25,6 @@ namespace Business
         }
 
         public int TokenExpiryMinutes { get { return _tokenExpiryMinutes; } }
-
-        public void RevokeToken(string token)
-        {
-            var key = GetTokenWhitelistKey(token);
-            _redisDb.KeyDelete(key);
-        }
-
-        public void StoreToken(string token)
-        {
-            var key = GetTokenWhitelistKey(token);
-
-            // Since Redis is running locally, syncronous operation is more efficient. Use async in I/O bound operations
-            _redisDb.StringSet(key, "valid", TimeSpan.FromMinutes(_tokenExpiryMinutes));
-        }
-
-        // Whitelisting tokens is more memory efficient than blacklisting them
-        public bool IsTokenWhitelisted(string token)
-        {
-            var key = GetTokenWhitelistKey(token);
-            return _redisDb.KeyExists(key);
-        }
 
         public string GenerateJwtToken(User user)
         {
@@ -76,11 +52,6 @@ namespace Business
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private string GetTokenWhitelistKey(string token)
-        {
-            return $"whitelist_tokens:{token}";
         }
     }
 }

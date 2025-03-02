@@ -17,7 +17,7 @@ namespace API.Controllers
     }
 
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     [Authorize]
     public class LoginController : ControllerBase
@@ -33,7 +33,7 @@ namespace API.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
@@ -62,7 +62,7 @@ namespace API.Controllers
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false, // Set to true in production
+                    Secure = false, // Use secure in production (HTTPS required)
                     SameSite = SameSiteMode.Strict,
                     Expires = DateTime.UtcNow.AddMinutes(_jwtService.TokenExpiryMinutes)
                 };
@@ -76,6 +76,22 @@ namespace API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+        }
+
+        [HttpGet("logout")]
+        public IActionResult Logout() 
+        {
+            
+            // Remove access token and invalidate the cookie
+            Response.Cookies.Append("access_token", "", new()
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(-1) // Expire the cookie
+            });
+
+            return Ok(new { message = "Logged out successfully"});
         }
     }
 }
