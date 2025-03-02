@@ -1,11 +1,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { AgGridAngular } from 'ag-grid-angular';
-import type { ColDef } from 'ag-grid-community';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+import { LocalizedDatePipe } from '../../pipes/localise-date.pipe';
 
 interface IExpense {
   date: Date;
@@ -17,14 +13,14 @@ interface IExpense {
 
 @Component({
   selector: 'app-expense-spreadsheet',
-  imports: [CommonModule, AgGridAngular],
+  imports: [CommonModule, LocalizedDatePipe],
   templateUrl: './expense-spreadsheet.component.html',
   styleUrl: './expense-spreadsheet.component.scss',
   standalone: true
 })
 export class ExpenseSpreadsheetComponent {
 
-  rowData: IExpense[] = [
+  expenses: IExpense[] = [
     {
       date: new Date("2025-03-01"),
       category: "Groceries",
@@ -61,16 +57,4 @@ export class ExpenseSpreadsheetComponent {
       paymentMethod: "Bank transfer",
     }
   ];
-
-  colDefs: ColDef[] = [
-    { field: "date", headerName: "Date" },
-    { field: "category", headerName: "Category" },
-    { field: "description", headerName: "Description" },
-    { field: "amount", headerName: "Amount" },
-    { field: "paymentMethod", headerName: "Payment method" },
-  ]
-
-  defaultColDef: ColDef = {
-    flex: 1,
-  };
 }
