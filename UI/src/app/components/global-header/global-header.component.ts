@@ -1,6 +1,6 @@
 import { LocalStorageService } from './../../services/LocalStorage.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { ClockComponent } from '../clock/clock.component';
 import { IUser } from '../../models/user.model';
 
@@ -12,12 +12,24 @@ import { IUser } from '../../models/user.model';
 })
 export class GlobalHeaderComponent implements OnInit {
 
-  constructor(private localStorage: LocalStorageService) {
+  constructor(private localStorage: LocalStorageService, private elementRef: ElementRef) {
     this.user = this.localStorage.getUser();
   }
 
   date: string = '';
   user: IUser | null;
+
+  dropdownOpened: boolean = false;
+  waitingResponse: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  closeDropdown(): void {
+    this.dropdownOpened = false;
+  }
+
+  toggleDropdown(): void {
+    this.dropdownOpened = !this.dropdownOpened;
+  }
 
   ngOnInit(): void {
     this.user = this.localStorage.getUser();
