@@ -24,7 +24,7 @@ export class ExpenseSpreadsheetComponent {
 
   addRow(): void {
     this.expenses.push({
-      category: "Select category",
+      category: "No category",
       description: "No description",
       amount: 0
     })
