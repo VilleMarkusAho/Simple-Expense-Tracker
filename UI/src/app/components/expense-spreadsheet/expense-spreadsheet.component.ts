@@ -20,6 +20,8 @@ interface IExpense {
 })
 export class ExpenseSpreadsheetComponent {
 
+  unit: "$" | "€" = "€";
+
   expenses: IExpense[] = [
     {
       date: new Date("2025-03-01"),
