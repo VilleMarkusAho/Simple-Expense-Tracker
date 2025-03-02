@@ -6,6 +6,10 @@ table {
   width: 100%;
 }
 
+table * {
+  font-family: system-ui;
+}
+
 th, td {
   padding: 12px;
   text-align: left;
@@ -16,7 +20,7 @@ th {
   color: #f8f8f8;
   text-transform: uppercase;
   border-bottom: 2px solid #555;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -41,4 +45,21 @@ td {
 th:first-child,
 td:first-child {
   padding-left: 21px;
+}
+
+#currency-type,
+#dollar-input {
+  margin-left: 20px;
+}
+
+.currency-label {
+  font-size: 20px;
+}
+
+.currency-input {
+  margin-top: 8px;
+}
+
+.form-control {
+  width: auto;
 }

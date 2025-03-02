@@ -6,6 +6,10 @@
   cursor: pointer;
 }
 
+.float-right {
+  float: right;
+}
+
 // Customize Angular material styles for the entire app. Change :root to your selector if you want to scope the styles.
 :root {
   @include mat.progress-spinner-overrides((
