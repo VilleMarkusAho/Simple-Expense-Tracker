@@ -34,4 +34,8 @@ export class LocalStorageService {
   getUser(): IUser | null {
     return this.getItem<IUser>(LocalStorageKey.USER);
   }
+
+  clear(): void {
+    localStorage.clear();
+  }
 }

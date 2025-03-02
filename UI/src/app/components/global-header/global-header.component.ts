@@ -1,8 +1,9 @@
 import { LocalStorageService } from './../../services/LocalStorage.service';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ClockComponent } from '../clock/clock.component';
 import { IUser } from '../../models/user.model';
+import { AuthService } from '../../services/AuthService.service';
 
 @Component({
   selector: 'app-global-header',
@@ -12,7 +13,7 @@ import { IUser } from '../../models/user.model';
 })
 export class GlobalHeaderComponent implements OnInit {
 
-  constructor(private localStorage: LocalStorageService, private elementRef: ElementRef) {
+  constructor(private localStorage: LocalStorageService, private authService: AuthService) {
     this.user = this.localStorage.getUser();
   }
 
@@ -29,6 +30,10 @@ export class GlobalHeaderComponent implements OnInit {
 
   toggleDropdown(): void {
     this.dropdownOpened = !this.dropdownOpened;
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 
   ngOnInit(): void {

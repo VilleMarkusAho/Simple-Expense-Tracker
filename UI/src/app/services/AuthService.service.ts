@@ -1,17 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LocalStorageService } from './LocalStorage.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private localStorage: LocalStorageService,
+    private router: Router
+  ) { }
 
   login(username: string, password: string): Observable<any> {
-    const url = "login";
-    return this.http.post<{ message: string, result: object }>(url, { username, password });
+    return this.http.post<{ message: string, result: object }>("login", { username, password });
+  }
+
+  logout(): void {
+    this.localStorage.clear();
+    this.http.get("logout").subscribe();
+    this.router.navigate(["/login"]);
   }
 
   isAuthenticated(): Observable<boolean> {
