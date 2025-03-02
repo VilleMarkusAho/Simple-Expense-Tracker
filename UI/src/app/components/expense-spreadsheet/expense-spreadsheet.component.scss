@@ -42,9 +42,12 @@ td {
   color: white;
 }
 
-th:first-child,
-td:first-child {
-  padding-left: 21px;
+td .fa-trash-can {
+  visibility: hidden;
+}
+
+tr:hover td .fa-trash-can {
+  visibility: visible;
 }
 
 #currency-type,
@@ -62,4 +65,23 @@ td:first-child {
 
 .form-control {
   width: auto;
+}
+
+.fa-plus {
+  transform: scale(1.3);
+}
+
+.fa-trash-can,
+.fa-plus {
+  cursor: pointer;
+}
+
+.delete-row-button {
+  height: 40px;
+  width: 10px;
+  position: absolute;
+}
+
+i {
+  font-family: "Font Awesome 6 Free" !important
 }

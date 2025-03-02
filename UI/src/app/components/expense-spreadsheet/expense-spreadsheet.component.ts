@@ -1,4 +1,4 @@
-
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ interface IExpense {
 
 @Component({
   selector: 'app-expense-spreadsheet',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './expense-spreadsheet.component.html',
   styleUrl: './expense-spreadsheet.component.scss',
   standalone: true
@@ -21,6 +21,10 @@ export class ExpenseSpreadsheetComponent {
   currency: "$" | "€" = "$";
   periodType: 'weekly' | 'monthly' = 'weekly';
   startDate = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+
+  addRow(): void {
+
+  }
 
   expenses: IExpense[] = [
     {

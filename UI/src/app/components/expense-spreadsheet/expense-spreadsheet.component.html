@@ -63,6 +63,9 @@
 <table>
   <thead>
     <tr>
+      <th>
+        <i class="fa-solid fa-plus" ></i>
+      </th>
       <th>Category</th>
       <th>Description</th>
       <th>Amount</th>
@@ -71,15 +74,22 @@
 
   <tbody>
     <tr *ngFor="let expense of expenses">
+      <td style="width: 0;">
+        <i class="fa-solid fa-trash-can cursor-pointer"></i>
+      </td>
       <td>{{ expense.category }}</td>
       <td>{{ expense.description }}</td>
-      <td>{{ expense.amount + currency }}</td>
+      <td>
+        {{ expense.amount + currency }}
+      </td>
     </tr>
   </tbody>
 
   <tfoot>
     <th></th>
+    <th></th>
     <th style="text-align: end;">Total amount:</th>
     <th>200{{ currency }}</th>
   </tfoot>
 </table>
+
