@@ -13,7 +13,6 @@ interface IExpense {
   description: string;
   amount: number;
   paymentMethod: "Bank transfer" | "Credit card" | "Debit card";
-  notes: string;
 }
 
 @Component({
@@ -32,7 +31,6 @@ export class ExpenseSpreadsheetComponent {
       description: "Bought vegetables and dairy products",
       amount: 45.75,
       paymentMethod: "Credit card",
-      notes: "Used discount coupon"
     },
     {
       date: new Date("2025-02-28"),
@@ -40,7 +38,6 @@ export class ExpenseSpreadsheetComponent {
       description: "Monthly subway pass",
       amount: 60.00,
       paymentMethod: "Debit card",
-      notes: "Valid for 30 days"
     },
     {
       date: new Date("2025-02-27"),
@@ -48,7 +45,6 @@ export class ExpenseSpreadsheetComponent {
       description: "Movie ticket for sci-fi film",
       amount: 12.50,
       paymentMethod: "Bank transfer",
-      notes: "Evening show at 7:30 PM"
     },
     {
       date: new Date("2025-02-26"),
@@ -56,7 +52,6 @@ export class ExpenseSpreadsheetComponent {
       description: "Dinner at an Italian restaurant",
       amount: 85.00,
       paymentMethod: "Credit card",
-      notes: "Celebrated friend's birthday"
     },
     {
       date: new Date("2025-02-25"),
@@ -64,7 +59,6 @@ export class ExpenseSpreadsheetComponent {
       description: "Electricity bill payment",
       amount: 120.45,
       paymentMethod: "Bank transfer",
-      notes: "Monthly bill for February"
     }
   ];
 
@@ -74,7 +68,6 @@ export class ExpenseSpreadsheetComponent {
     { field: "description", headerName: "Description" },
     { field: "amount", headerName: "Amount" },
     { field: "paymentMethod", headerName: "Payment method" },
-    { field: "notes", headerName: "Notes" }
   ]
 
   defaultColDef: ColDef = {
