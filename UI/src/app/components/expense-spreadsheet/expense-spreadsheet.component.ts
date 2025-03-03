@@ -18,7 +18,7 @@ interface IExpense {
 })
 export class ExpenseSpreadsheetComponent {
 
-  currency: "$" | "€" = "$";
+  currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
   periodType: 'weekly' | 'monthly' = 'weekly';
   startDate = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 

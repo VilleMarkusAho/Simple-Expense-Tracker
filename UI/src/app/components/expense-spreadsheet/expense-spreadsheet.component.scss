@@ -50,17 +50,8 @@ tr:hover td .fa-trash-can {
   visibility: visible;
 }
 
-#currency-type,
-#dollar-input {
-  margin-left: 20px;
-}
-
-.currency-label {
-  font-size: 20px;
-}
-
-.currency-input {
-  margin-top: 8px;
+#revenue {
+  margin-left: 15px;
 }
 
 .form-control {
@@ -84,4 +75,8 @@ tr:hover td .fa-trash-can {
 
 i {
   font-family: "Font Awesome 6 Free" !important
+}
+
+label {
+  font-weight: 600;
 }
