@@ -96,7 +96,7 @@
 
       <ng-template #amountTemplate>
         <td (click)="toggleEdit(i, 2)">
-          {{ expense.amount + finance.currency }}
+          {{ expense.amount + " " + finance.currency }}
         </td>
       </ng-template>
     </tr>
@@ -114,9 +114,9 @@
     </th>
     <th>
       <div class="x">
-        <p>{{ (finance.totalExpenses || 0) + finance.currency }}</p>
-        <p>{{ (finance.revenue || 0) + finance.currency }}</p>
-        <p>{{ (finance.balance || 0) + finance.currency }}</p>
+        <p>{{ (finance.totalExpenses || 0) +  " " + finance.currency }}</p>
+        <p>{{ (finance.revenue || 0) + " " + finance.currency }}</p>
+        <p>{{ (finance.balance || 0) + " " + finance.currency }}</p>
       </div>
     </th>
   </tfoot>
