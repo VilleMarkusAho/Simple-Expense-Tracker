@@ -1,6 +1,6 @@
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface IExpense {
@@ -21,6 +21,14 @@ export class ExpenseSpreadsheetComponent {
   currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
   editingRowIndex: number = -1;
   editingColumnIndex: number = -1;
+
+  @HostListener('document:click', ['$event'])
+  setEditToFalse(event: Event): void {
+    if ((event.target as HTMLElement).tagName !== 'TD') {
+      this.editingRowIndex = -1;
+      this.editingColumnIndex = -1;
+    }
+  }
 
   addRow(): void {
     this.expenses.push({
