@@ -24,7 +24,7 @@ export class ExpenseSpreadsheetComponent {
 
   @HostListener('document:click', ['$event'])
   setEditToFalse(event: Event): void {
-    if ((event.target as HTMLElement).tagName !== 'TD') {
+    if (!['TD', "INPUT"].includes((event.target as HTMLElement).tagName)) {
       this.editingRowIndex = -1;
       this.editingColumnIndex = -1;
     }
