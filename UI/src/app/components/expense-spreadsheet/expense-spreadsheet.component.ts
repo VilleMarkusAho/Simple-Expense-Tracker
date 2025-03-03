@@ -1,20 +1,20 @@
+import { FinanceService } from '../../services/Finance.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IExpense } from '../../models/expense.model';
-import { TotalExpensesPipe } from '../../pipes/total-expenses.pipe';
 
 @Component({
   selector: 'app-expense-spreadsheet',
-  imports: [CommonModule, FormsModule, MatIconModule, TotalExpensesPipe],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './expense-spreadsheet.component.html',
   styleUrl: './expense-spreadsheet.component.scss',
   standalone: true
 })
 export class ExpenseSpreadsheetComponent {
 
-  currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
+  constructor(public finance: FinanceService) { }
+
   editingRowIndex: number = -1;
   editingColumnIndex: number = -1;
 
@@ -27,7 +27,7 @@ export class ExpenseSpreadsheetComponent {
   }
 
   addRow(): void {
-    this.expenses.push({
+    this.finance.addExpense({
       category: "No category",
       description: "No description",
       amount: 0
@@ -35,39 +35,11 @@ export class ExpenseSpreadsheetComponent {
   }
 
   removeRow(index: number): void {
-    this.expenses.splice(index, 1);
+    this.finance.removeExpense(index);
   }
 
   toggleEdit(rowIndex: number, columnIndex: number): void {
     this.editingRowIndex = rowIndex;
     this.editingColumnIndex = columnIndex;
   }
-
-  expenses: IExpense[] = [
-    {
-      category: "Groceries",
-      description: "Bought vegetables and dairy products",
-      amount: 45.75,
-    },
-    {
-      category: "Transportation",
-      description: "Monthly subway pass",
-      amount: 60.00,
-    },
-    {
-      category: "Entertainment",
-      description: "Movie ticket for sci-fi film",
-      amount: 12.50,
-    },
-    {
-      category: "Dining",
-      description: "Dinner at an Italian restaurant",
-      amount: 85.00,
-    },
-    {
-      category: "Utilities",
-      description: "Electricity bill payment",
-      amount: 120.45,
-    }
-  ];
 }

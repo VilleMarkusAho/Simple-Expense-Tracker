@@ -4,7 +4,7 @@
       Currency:&nbsp;&nbsp;&nbsp;
     </label>
 
-    <select [(ngModel)]="currency" class="form-select form-select-sm" id="currency-select">
+    <select [(ngModel)]="finance.currency" class="form-select form-select-sm" id="currency-select">
       <option value="$">$ (USD)</option>
       <option value="€">€ (EUR)</option>
       <option value="£">£ (GBP)</option>
@@ -18,7 +18,9 @@
       class="form-control form-control-sm ml-2"
       type="number"
       id="revenue"
-      [placeholder]="'Revenue' + ' (' + currency + ')' "
+      [placeholder]="'Revenue' + ' (' + finance.currency + ')' "
+      (ngModelChange)="finance.updateRevenue($event)"
+      [ngModel]="finance.revenue"
     >
   </div>
 </div>
@@ -36,7 +38,7 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let expense of expenses; let i = index">
+    <tr *ngFor="let expense of finance.expenses; let i = index">
       <td class="no-hover" style="width: 0; cursor: default;" (click)="$event.stopPropagation()">
         <i class="fa-solid fa-trash-can cursor-pointer" (click)="removeRow(i)"></i>
       </td>
@@ -94,7 +96,7 @@
 
       <ng-template #amountTemplate>
         <td (click)="toggleEdit(i, 2)">
-          {{ expense.amount + currency }}
+          {{ expense.amount + finance.currency }}
         </td>
       </ng-template>
     </tr>
@@ -103,8 +105,20 @@
   <tfoot>
     <th></th>
     <th></th>
-    <th style="text-align: end;">Total amount:</th>
-    <th>{{ (expenses | totalExpenses) + currency }}</th>
+    <th style="text-align: end;">
+      <div class="x">
+        <p>Expenses:</p>
+        <p>Revenue:</p>
+        <p>Balance:</p>
+      </div>
+    </th>
+    <th>
+      <div class="x">
+        <p>{{ (finance.totalExpenses || 0) + finance.currency }}</p>
+        <p>{{ (finance.revenue || 0) + finance.currency }}</p>
+        <p>{{ (finance.balance || 0) + finance.currency }}</p>
+      </div>
+    </th>
   </tfoot>
 </table>
 
