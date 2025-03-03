@@ -43,6 +43,10 @@ td:hover {
   transition: background-color 0.2s ease-in-out;
 }
 
+.no-hover:hover {
+  background-color: inherit;
+}
+
 td .fa-trash-can {
   visibility: hidden;
 }

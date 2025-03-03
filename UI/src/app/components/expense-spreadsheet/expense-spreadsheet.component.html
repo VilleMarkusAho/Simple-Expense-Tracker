@@ -37,7 +37,7 @@
 
   <tbody>
     <tr *ngFor="let expense of expenses; let i = index">
-      <td style="width: 0; cursor: default;" (click)="$event.stopPropagation()">
+      <td class="no-hover" style="width: 0; cursor: default;" (click)="$event.stopPropagation()">
         <i class="fa-solid fa-trash-can cursor-pointer" (click)="removeRow(i)"></i>
       </td>
 
