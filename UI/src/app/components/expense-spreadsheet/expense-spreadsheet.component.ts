@@ -19,8 +19,8 @@ interface IExpense {
 export class ExpenseSpreadsheetComponent {
 
   currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
-  periodType: 'weekly' | 'monthly' = 'weekly';
-  startDate = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+  editingRowIndex: number = -1;
+  editingColumnIndex: number = -1;
 
   addRow(): void {
     this.expenses.push({
@@ -32,6 +32,11 @@ export class ExpenseSpreadsheetComponent {
 
   removeRow(index: number): void {
     this.expenses.splice(index, 1);
+  }
+
+  toggleEdit(rowIndex: number, columnIndex: number): void {
+    this.editingRowIndex = rowIndex;
+    this.editingColumnIndex = columnIndex;
   }
 
   expenses: IExpense[] = [

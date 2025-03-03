@@ -37,14 +37,66 @@
 
   <tbody>
     <tr *ngFor="let expense of expenses; let i = index">
-      <td style="width: 0;">
+      <td style="width: 0;" (click)="$event.stopPropagation()">
         <i class="fa-solid fa-trash-can cursor-pointer" (click)="removeRow(i)"></i>
       </td>
-      <td>{{ expense.category }}</td>
-      <td>{{ expense.description }}</td>
-      <td>
-        {{ expense.amount + currency }}
-      </td>
+
+      <ng-container
+        *ngIf="editingRowIndex === i && editingColumnIndex === 0; else categoryTemplate"
+      >
+        <td>
+          <input
+            class="form-control form-control-sm input-edit"
+            type="text"
+            [attr.size]="expense.category.length || 1"
+            [(ngModel)]="expense.category"
+          >
+        </td>
+      </ng-container>
+
+      <ng-template #categoryTemplate>
+        <td (click)="toggleEdit(i, 0)">
+          {{ expense.category }}
+        </td>
+      </ng-template>
+
+      <ng-container
+        *ngIf="editingRowIndex === i && editingColumnIndex === 1; else descriptionTemplate"
+      >
+        <td>
+          <input
+            class="form-control form-control-sm input-edit"
+            type="text"
+            [attr.size]="expense.description.length || 1"
+            [(ngModel)]="expense.description"
+          >
+        </td>
+      </ng-container>
+
+      <ng-template #descriptionTemplate>
+        <td (click)="toggleEdit(i, 1)">
+          {{ expense.description }}
+        </td>
+      </ng-template>
+
+      <ng-container
+        *ngIf="editingRowIndex === i && editingColumnIndex === 2; else amountTemplate"
+      >
+        <td>
+          <input
+            class="form-control form-control-sm input-edit"
+            type="number"
+            [attr.size]="expense.amount.toString().length || 1"
+            [(ngModel)]="expense.amount"
+          >
+        </td>
+      </ng-container>
+
+      <ng-template #amountTemplate>
+        <td (click)="toggleEdit(i, 2)">
+          {{ expense.amount + currency }}
+        </td>
+      </ng-template>
     </tr>
   </tbody>
 
