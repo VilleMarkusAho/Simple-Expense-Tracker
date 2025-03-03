@@ -86,7 +86,7 @@
           <input
             class="form-control form-control-sm input-edit"
             type="number"
-            [attr.size]="expense.amount.toString().length || 1"
+            [attr.size]="expense?.amount?.toString()?.length || 1"
             [(ngModel)]="expense.amount"
           >
         </td>
@@ -104,7 +104,7 @@
     <th></th>
     <th></th>
     <th style="text-align: end;">Total amount:</th>
-    <th>200{{ currency }}</th>
+    <th>{{ (expenses | totalExpenses) + currency }}</th>
   </tfoot>
 </table>
 

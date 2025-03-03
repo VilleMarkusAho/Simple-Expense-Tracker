@@ -2,16 +2,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-interface IExpense {
-  category: string;
-  description: string;
-  amount: number;
-}
+import { IExpense } from '../../models/expense.model';
+import { TotalExpensesPipe } from '../../pipes/total-expenses.pipe';
 
 @Component({
   selector: 'app-expense-spreadsheet',
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TotalExpensesPipe],
   templateUrl: './expense-spreadsheet.component.html',
   styleUrl: './expense-spreadsheet.component.scss',
   standalone: true
