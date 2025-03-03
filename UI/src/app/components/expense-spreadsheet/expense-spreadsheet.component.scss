@@ -32,14 +32,15 @@ tr:nth-child(odd) {
   background-color: #4a4a4a;
 }
 
-tr:hover {
-  background-color: #666;
-  transition: background-color 0.3s;
-}
-
 td {
   border-bottom: 1px solid #666;
   color: white;
+}
+
+td:hover {
+  background-color: #666;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 td .fa-trash-can {
@@ -80,7 +81,3 @@ i {
 label {
   font-weight: 600;
 }
-
-/* .input-edit {
-  width: 70% !important;
-} */
