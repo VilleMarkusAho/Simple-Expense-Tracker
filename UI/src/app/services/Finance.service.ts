@@ -6,6 +6,8 @@ import { IExpense } from '../models/expense.model';
 })
 export class FinanceService {
 
+  // FIXME: expneses won't be updated when changing the value in the table
+
   constructor() { }
 
   currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
