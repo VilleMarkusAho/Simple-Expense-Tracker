@@ -38,6 +38,10 @@ export class ExpenseSpreadsheetComponent {
     this.finance.removeExpense(index);
   }
 
+  updateAmount(index: number, amount: number): void {
+    this.finance.updateExpenseAmount(index, amount);
+  }
+
   toggleEdit(rowIndex: number, columnIndex: number): void {
     this.editingRowIndex = rowIndex;
     this.editingColumnIndex = columnIndex;

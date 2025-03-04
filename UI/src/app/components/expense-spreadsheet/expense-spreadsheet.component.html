@@ -89,6 +89,7 @@
             class="form-control form-control-sm input-edit"
             type="number"
             [attr.size]="expense?.amount?.toString()?.length || 1"
+            (ngModelChange)="updateAmount(i, $event)"
             [(ngModel)]="expense.amount"
           >
         </td>

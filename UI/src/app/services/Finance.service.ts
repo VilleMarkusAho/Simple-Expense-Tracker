@@ -6,8 +6,6 @@ import { IExpense } from '../models/expense.model';
 })
 export class FinanceService {
 
-  // FIXME: expneses won't be updated when changing the value in the table
-
   constructor() { }
 
   currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
@@ -19,6 +17,14 @@ export class FinanceService {
   addExpense(expense: IExpense): void {
     this.expenses.push(expense);
     this.totalExpenses += expense.amount || 0;
+    this.updateBalance();
+  }
+
+  updateExpenseAmount(index: number, sum: number): void {
+    sum = sum || 0; // if sum is null or undefined, set it to 0
+    const prevAmount = this.expenses[index].amount || 0;
+    this.expenses[index].amount = sum;
+    this.totalExpenses = this.totalExpenses - prevAmount + sum;
     this.updateBalance();
   }
 
