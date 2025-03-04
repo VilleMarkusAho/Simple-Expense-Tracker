@@ -10,7 +10,8 @@ export class HttpInterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const baseUrl = environment?.apiUrl || 'http://localhost:5000/api/';
-    const apiReq = req.clone({ url: baseUrl + req.url });
+    // withCredentials: true is required for sending cookies
+    const apiReq = req.clone({ url: baseUrl + req.url, withCredentials: true });
     return next.handle(apiReq);
   }
 }

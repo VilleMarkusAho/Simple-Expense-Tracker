@@ -1,43 +1,51 @@
+import { LocalStorageKey, LocalStorageService } from './../../services/LocalStorage.service';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/AuthService.service';
+import { environment } from '../../../environments/environment.development';
+import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatProgressSpinnerModule],
   providers: [AuthService],
   standalone: true
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private localStorage: LocalStorageService,
+    private router: Router
+  ) { }
 
-  username: string = "";
-  password: string = "";
+  username: string = environment.username || "";
+  password: string = environment.password || "";
 
-  signningIn: boolean = false;
+  errorMessage: string = "";
+  waitingResponse: boolean = false;
 
   login(): void {
-    this.signningIn = true;
+    this.waitingResponse = true;
 
-    this.authService.login(this.username, this.password).subscribe(() => {
-      alert("Login successful");
-      this.signningIn = false;
-    }, (error) => {
-      alert("Login failed");
-      this.signningIn = false;
+    this.authService.login(this.username, this.password).subscribe({
+      next: response => {
+        this.waitingResponse = false;
+        this.localStorage.setItem(LocalStorageKey.USER, response.result);
+        this.router.navigate(["/dashboard"]);
+      },
+      error: error => {
+        this.waitingResponse = false
+        this.errorMessage = error.message;
+      }
     });
   }
 
   onFogotPasswordClick(): void {
     alert("Nothing happens");
   }
-
-  ngOnInit(): void {
-
-  }
-
 }

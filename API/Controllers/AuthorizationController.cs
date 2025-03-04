@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Business;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -7,11 +7,19 @@ namespace API.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
+        private readonly IUserHelper _userHelper;
 
-        [HttpGet("isAuthenticated")]
-        public IActionResult IsAuthorized()
+        public AuthorizationController(IUserHelper userHelper)
         {
-            return Unauthorized();
+            _userHelper = userHelper;
+        }
+
+        [HttpGet("status")]
+        public IActionResult IsAuthenticated()
+        {
+            bool isAuthenticated = _userHelper.IsAuthenticated(User);
+
+            return Ok(isAuthenticated);
         }
     }
 }

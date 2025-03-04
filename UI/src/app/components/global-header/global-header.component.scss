@@ -1,0 +1,54 @@
+header {
+  height: 100%;
+  background-color: crimson;
+  color: white;
+  padding: 0 35px;
+}
+
+* {
+  color: white;
+}
+
+.date {
+  margin-bottom: 0;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  background: white;
+  color: black !important;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  min-width: 150px;
+  z-index: 1000;
+  top: 8%;
+  right: 10px;
+}
+
+.dropdown * {
+  color: black;
+  text-align: center;
+}
+
+.header-button:hover,
+.dropdown-item:hover {
+  font-weight: 700;
+}
+
+.dropdown,
+.dropdown-item {
+  font-weight: 500;
+}
+
+#logout-button {
+  color: white;
+  align-self: center;
+  margin: auto;
+  margin-top: 1.5rem !important;
+}
+
+.caret-up {
+  transform: rotate(180deg);
+}

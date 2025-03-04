@@ -1,4 +1,6 @@
 <div class="wrapper">
+  <app-global-header *ngIf="showHeader"></app-global-header>
+
   <main class="content">
     <router-outlet></router-outlet>
   </main>

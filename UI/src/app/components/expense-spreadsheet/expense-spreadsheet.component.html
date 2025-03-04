@@ -1,0 +1,125 @@
+<div class="d-flex mb-3" style="gap: 15px">
+  <div class="d-flex align-items-center">
+    <label for="currency-select" class="mb-1">
+      Currency:&nbsp;&nbsp;&nbsp;
+    </label>
+
+    <select [(ngModel)]="finance.currency" class="form-select form-select-sm" id="currency-select">
+      <option value="$">$ (USD)</option>
+      <option value="€">€ (EUR)</option>
+      <option value="£">£ (GBP)</option>
+      <option value="¥">¥ (JPY)</option>
+      <option value="CHF">CHF (CHF)</option>
+      <option value="C$">C$ (CAD)</option>
+      <option value="A$">A$ (AUD)</option>
+    </select>
+
+    <input
+      class="form-control form-control-sm ml-2"
+      type="number"
+      id="revenue"
+      [placeholder]="'Revenue' + ' (' + finance.currency + ')' "
+      (ngModelChange)="finance.updateRevenue($event)"
+      [ngModel]="finance.revenue"
+    >
+  </div>
+</div>
+
+<table class="mb-2">
+  <thead>
+    <tr>
+      <th>
+        <i class="fa-solid fa-plus" (click)="addRow()"></i>
+      </th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let expense of finance.expenses; let i = index">
+      <td class="no-hover" style="width: 0; cursor: default;" (click)="$event.stopPropagation()">
+        <i class="fa-solid fa-trash-can cursor-pointer" (click)="removeRow(i)"></i>
+      </td>
+
+      <ng-container
+        *ngIf="editingRowIndex === i && editingColumnIndex === 0; else categoryTemplate"
+      >
+        <td>
+          <input
+            class="form-control form-control-sm input-edit"
+            type="text"
+            [attr.size]="expense.category.length || 1"
+            [(ngModel)]="expense.category"
+          >
+        </td>
+      </ng-container>
+
+      <ng-template #categoryTemplate>
+        <td (click)="toggleEdit(i, 0)">
+          {{ expense.category }}
+        </td>
+      </ng-template>
+
+      <ng-container
+        *ngIf="editingRowIndex === i && editingColumnIndex === 1; else descriptionTemplate"
+      >
+        <td>
+          <input
+            class="form-control form-control-sm input-edit"
+            type="text"
+            [attr.size]="expense.description.length || 1"
+            [(ngModel)]="expense.description"
+          >
+        </td>
+      </ng-container>
+
+      <ng-template #descriptionTemplate>
+        <td (click)="toggleEdit(i, 1)">
+          {{ expense.description }}
+        </td>
+      </ng-template>
+
+      <ng-container
+        *ngIf="editingRowIndex === i && editingColumnIndex === 2; else amountTemplate"
+      >
+        <td>
+          <input
+            class="form-control form-control-sm input-edit"
+            type="number"
+            [attr.size]="expense?.amount?.toString()?.length || 1"
+            (ngModelChange)="updateAmount(i, $event)"
+            [(ngModel)]="expense.amount"
+          >
+        </td>
+      </ng-container>
+
+      <ng-template #amountTemplate>
+        <td (click)="toggleEdit(i, 2)">
+          {{ expense.amount + " " + finance.currency }}
+        </td>
+      </ng-template>
+    </tr>
+  </tbody>
+
+  <tfoot>
+    <th></th>
+    <th></th>
+    <th style="text-align: end;">
+      <div class="x">
+        <p>Expenses:</p>
+        <p>Revenue:</p>
+        <p>Balance:</p>
+      </div>
+    </th>
+    <th>
+      <div class="x">
+        <p>{{ (finance.totalExpenses || 0) +  " " + finance.currency }}</p>
+        <p>{{ (finance.revenue || 0) + " " + finance.currency }}</p>
+        <p>{{ (finance.balance || 0) + " " + finance.currency }}</p>
+      </div>
+    </th>
+  </tfoot>
+</table>
+

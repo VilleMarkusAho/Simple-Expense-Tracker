@@ -1,0 +1,22 @@
+<header class="d-flex justify-content-between align-items-center">
+  <div class="d-flex align-items-center" style="gap: 0.7rem;">
+    <app-clock></app-clock>
+    <h5 class="date">{{ date }}</h5>
+  </div>
+
+  <div class="cursor-pointer header-button" (click)="$event.stopPropagation(); toggleDropdown()">
+    {{ user?.firstName  + ' ' + user?.lastName }}
+
+    <svg class="caret-svg" viewBox="0 0 24 24" width="24" height="24" [ngClass]="{ 'caret-up': dropdownOpened }">
+      <path d="M7 10l5 5 5-5H7z" fill="white" stroke="white" stroke-linejoin="round" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <div *ngIf="dropdownOpened" class="dropdown" (click)="$event.stopPropagation()">
+    <a routerLink="/profile" class="dropdown-item cursor-pointer">Settings</a>
+
+    <button id="logout-button" class="btn btn-primary" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</header>

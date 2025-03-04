@@ -1,9 +1,21 @@
+@use '@angular/material' as mat;
+
 /* You can add global styles to this file, and also import other style files */
 
 .cursor-pointer {
   cursor: pointer;
 }
 
+.float-right {
+  float: right;
+}
+
+// Customize Angular material styles for the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.progress-spinner-overrides((
+    active-indicator-color: white,
+  ));
+}
 
 /*
 -------------------------------------------------------------------------------
@@ -14,6 +26,10 @@
 .btn {
   padding-right: 1rem !important;
   padding-left: 1rem !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 
