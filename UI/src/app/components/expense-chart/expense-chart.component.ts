@@ -1,47 +1,82 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { IExpense } from '../../models/expense.model';
 
 @Component({
   selector: 'app-expense-chart',
   imports: [],
   templateUrl: './expense-chart.component.html',
   styleUrl: './expense-chart.component.scss',
-  standalone: true
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseChartComponent implements OnInit {
+export class ExpenseChartComponent implements OnChanges {
+
+  @Input() expenses: IExpense[] = [];
+  @Input() revenue: number = 0;
+
   chart: any;
+  expenseMap: Map<string, number[]> = new Map();
 
-  createChart(){
 
-    this.chart = new Chart("MyChart", {
-      type: 'bar', //this denotes tha type of chart
-
-      data: {// values on X-Axis
-        labels: ['2022-05-10', '2022-05-11', '2022-05-12','2022-05-13',
-                                 '2022-05-14', '2022-05-15', '2022-05-16','2022-05-17', ],
-           datasets: [
-          {
-            label: "Sales",
-            data: ['467','576', '572', '79', '92',
-                                 '574', '573', '576'],
-            backgroundColor: 'blue'
-          },
-          {
-            label: "Profit",
-            data: ['542', '542', '536', '327', '17',
-                                     '0.00', '538', '541'],
-            backgroundColor: 'limegreen'
-          }
-        ]
+  createChart() {
+    this.chart = new Chart("Expenses", {
+      type: 'bar',
+      data: {
+        labels: ["Category"],
+        datasets: this.getChartDatasets(),
       },
       options: {
-        aspectRatio:2.5
+        aspectRatio: 2.5,
+        responsive: true,
+        scales: {
+          y: {
+            //stacked: true,
+          }
+        }
       }
-
     });
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.createChart();
   }
+
+  private getChartDatasets(): any[] {
+    let datasets1 = [];
+    const datasets2 = [];
+
+    for (const expense of this.expenses) {
+      datasets1.push({
+        label: expense.category,
+        data: [expense.amount],
+      });
+
+      datasets2.push(expense.amount);
+    }
+
+
+    datasets1.push({
+      label: "Total expenses",
+      data: datasets2,
+    });
+
+    console.log(datasets1);
+
+
+    return datasets1;
+  }
+
+  private getLabels(): string[] {
+    const categories = this.expenses.map((expense) => expense.category);
+
+    return [
+      ... new Set(categories),
+      "Total expenses",
+      "Revenue",
+      "Profit",
+    ];
+  }
 }
+
+

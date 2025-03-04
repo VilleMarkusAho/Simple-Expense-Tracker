@@ -9,7 +9,10 @@
     </div>
 
     <div class="chart-wrapper">
-      <app-expense-chart ></app-expense-chart>,
+      <app-expense-chart
+        [expenses]="finance.expenses"
+        [revenue]="finance.revenue"
+      ></app-expense-chart>,
     </div>
   </div>
 </div>
