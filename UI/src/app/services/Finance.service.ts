@@ -1,3 +1,4 @@
+import { ExpenseCategory } from './../models/expense.model';
 import { Injectable } from '@angular/core';
 import { IExpense } from '../models/expense.model';
 
@@ -50,27 +51,27 @@ export class FinanceService {
 
 const SAMPLE_EXPENSES: IExpense[] = [
   {
-    category: "Groceries",
+    category: ExpenseCategory.Groceries,
     description: "Bought vegetables and dairy products",
     amount: 45.75,
   },
   {
-    category: "Transportation",
+    category: ExpenseCategory.Transportation,
     description: "Monthly subway pass",
     amount: 60.00,
   },
   {
-    category: "Entertainment",
+    category: ExpenseCategory.Entertainment,
     description: "Movie ticket for sci-fi film",
     amount: 12.50,
   },
   {
-    category: "Dining",
+    category: ExpenseCategory.Dining,
     description: "Dinner at an Italian restaurant",
     amount: 85.00,
   },
   {
-    category: "Utilities",
+    category: ExpenseCategory.Utilities,
     description: "Electricity bill payment",
     amount: 120.45,
   }

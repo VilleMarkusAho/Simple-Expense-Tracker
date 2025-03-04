@@ -47,12 +47,11 @@
         *ngIf="editingRowIndex === i && editingColumnIndex === 0; else categoryTemplate"
       >
         <td>
-          <input
-            class="form-control form-control-sm input-edit"
-            type="text"
-            [attr.size]="expense.category.length || 1"
-            [(ngModel)]="expense.category"
-          >
+          <select [(ngModel)]="expense.category" class="form-select form-select-sm">
+            <option *ngFor="let option of categoryOptions" [value]="option">
+              {{ option }}
+            </option>
+          </select>
         </td>
       </ng-container>
 
