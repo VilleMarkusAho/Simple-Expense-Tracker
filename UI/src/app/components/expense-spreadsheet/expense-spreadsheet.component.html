@@ -1,6 +1,6 @@
 <div class="d-flex mb-3" style="gap: 15px">
   <div class="d-flex align-items-center">
-    <label for="currency-select" class="mb-1">
+    <label id="currency-label" for="currency-select" class="mb-1">
       Currency:&nbsp;&nbsp;&nbsp;
     </label>
 
@@ -25,7 +25,7 @@
   </div>
 </div>
 
-<table class="mb-2">
+<table class="mb-4">
   <thead>
     <tr>
       <th>
@@ -107,14 +107,14 @@
     <th></th>
     <th></th>
     <th style="text-align: end;">
-      <div class="x">
+      <div class="summary">
         <p>Expenses:</p>
         <p>Revenue:</p>
         <p>Balance:</p>
       </div>
     </th>
     <th>
-      <div class="x">
+      <div class="summary">
         <p>{{ (finance.totalExpenses || 0) +  " " + finance.currency }}</p>
         <p>{{ (finance.revenue || 0) + " " + finance.currency }}</p>
         <p>{{ (finance.balance || 0) + " " + finance.currency }}</p>
