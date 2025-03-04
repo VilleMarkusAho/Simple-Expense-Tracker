@@ -28,7 +28,7 @@ export class ExpenseSpreadsheetComponent {
 
   addRow(): void {
     this.finance.addExpense({
-      category: "No category",
+      category: "Uncategorized",
       description: "No description",
       amount: 0
     })
