@@ -3,3 +3,11 @@
   grid-template-columns: 1fr 1fr;
   height: 100%;
 }
+
+.chart-container {
+  margin-left: 4rem;
+}
+
+.download-panel-wrapper {
+  margin-right: 1.5rem;
+}

@@ -1,0 +1,22 @@
+<mat-accordion>
+  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <i class="fa-solid fa-download"></i>
+        Export
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+
+    <button class="btn btn btn-success">
+      <i class="fa-solid fa-file-excel"></i>
+      Excel
+    </button>
+
+    <button class="btn btn btn-danger mt-3">
+      <i class="fa-solid fa-file-pdf"></i>
+      PDF
+    </button>
+  </mat-expansion-panel>
+</mat-accordion>
+
