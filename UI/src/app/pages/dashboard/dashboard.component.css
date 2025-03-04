@@ -8,6 +8,15 @@
   margin-left: 4rem;
 }
 
+.spreadsheet-wrapper {
+  margin-top: 28px;
+}
+
 .download-panel-wrapper {
-  margin-right: 1.5rem;
+  position: absolute;
+  right: 20px;
+}
+
+.chart-wrapper {
+  margin-top: 75px;
 }
