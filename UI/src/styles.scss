@@ -15,6 +15,10 @@
   @include mat.progress-spinner-overrides((
     active-indicator-color: white,
   ));
+
+  @include mat.expansion-overrides((
+    container-background-color: white,
+  ));
 }
 
 /*
