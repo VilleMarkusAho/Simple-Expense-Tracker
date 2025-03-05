@@ -19,5 +19,7 @@
 }
 
 .chart-wrapper {
-  margin-top: 75px;
+  margin: 75px 20px 0 0;
+  max-width: 50vw;
+  height: 10px;
 }

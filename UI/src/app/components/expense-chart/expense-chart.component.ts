@@ -27,11 +27,11 @@ export class ExpenseChartComponent implements OnChanges {
         datasets: this.getChartDatasets(),
       },
       options: {
-        aspectRatio: 2.5,
+        //aspectRatio: 2.5,
         responsive: true,
         scales: {
-          y: {
-            //stacked: true,
+          x: {
+            beginAtZero: true,
           }
         }
       }
