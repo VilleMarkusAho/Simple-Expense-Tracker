@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { IExpense } from '../../models/expense.model';
 
@@ -27,14 +27,13 @@ export class ExpenseChartComponent implements OnChanges {
         datasets: this.getChartDatasets(),
       },
       options: {
-        //aspectRatio: 2.5,
         responsive: true,
         scales: {
           x: {
             beginAtZero: true,
           }
         }
-      }
+      },
     });
   }
 
@@ -74,19 +73,10 @@ export class ExpenseChartComponent implements OnChanges {
     datasets1.push({
       label: "Profit",
       data: [this.revenue - totalExpenses],
-      stack: "stack2",
+      stack: "stack3",
     })
 
     return datasets1;
-  }
-
-  private getLabels(): string[] {
-    return [
-      ...this.expenses.map((expense) => expense.category),
-      "Total expenses",
-      "Revenue",
-      "Profit",
-    ];
   }
 }
 
