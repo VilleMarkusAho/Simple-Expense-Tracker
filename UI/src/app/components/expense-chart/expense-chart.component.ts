@@ -3,6 +3,7 @@ import Chart, { ChartItem, plugins } from 'chart.js/auto';
 import { shuffleArray } from '../../utils/helper-functions';
 import { Currency, FinanceService } from '../../services/Finance.service';
 import { Subscription } from 'rxjs';
+import { ChartService } from '../../services/ChartService.service';
 
 const COLORS: string[] = [
   "rgb(112, 212, 252)",
@@ -37,7 +38,11 @@ const COLORS: string[] = [
 })
 export class ExpenseChartComponent implements OnInit, OnDestroy {
 
-  constructor(private finance: FinanceService, private cdRef: ChangeDetectorRef) {
+  constructor(
+    private finance: FinanceService,
+    private chartService: ChartService,
+    private cdRef: ChangeDetectorRef
+  ) {
     // Listen for changes in expenses and update the chart
     this.expenseChangeSub$ = finance.getExpenseChangeListener().subscribe(() => {
       if (this.chart) {
@@ -80,9 +85,11 @@ export class ExpenseChartComponent implements OnInit, OnDestroy {
             }
           }
         }
-
       },
     });
+
+    // After creating the chart, set the canvas in the ChartService
+    this.chartService.setChartCanvas(this.chart.canvas);
   }
 
   ngOnInit(): void {
