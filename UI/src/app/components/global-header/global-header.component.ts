@@ -4,10 +4,11 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ClockComponent } from '../clock/clock.component';
 import { IUser } from '../../models/user.model';
 import { AuthService } from '../../services/AuthService.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-global-header',
-  imports: [CommonModule, ClockComponent],
+  imports: [CommonModule, ClockComponent, RouterModule],
   templateUrl: './global-header.component.html',
   styleUrl: './global-header.component.scss'
 })

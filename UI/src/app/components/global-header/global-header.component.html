@@ -13,7 +13,7 @@
   </div>
 
   <div *ngIf="dropdownOpened" class="dropdown" (click)="$event.stopPropagation()">
-    <a routerLink="/profile" class="dropdown-item cursor-pointer">Settings</a>
+    <a routerLink="/profile/edit" class="dropdown-item cursor-pointer">Edit profile</a>
 
     <button id="logout-button" class="btn btn-primary" (click)="logout()">
       Logout
