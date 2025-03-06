@@ -1,5 +1,5 @@
 import { ChartService } from './../../services/ChartService.service';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { jsPDF } from 'jspdf';
 
@@ -10,15 +10,12 @@ import { jsPDF } from 'jspdf';
   styleUrl: './download-panel.component.scss',
   standalone: true
 })
-export class DownloadPanelComponent implements OnInit {
-
+export class DownloadPanelComponent {
   constructor(private chartService: ChartService) { }
 
   readonly panelOpenState = signal(false);
 
   downloadPdf(): void {
-    console.log(this.chartService.chartCanvas);
-
     if (this.chartService.chartCanvas) {
       const canvas = this.chartService.chartCanvas;
 
@@ -38,10 +35,5 @@ export class DownloadPanelComponent implements OnInit {
     else {
       console.error('Chart canvas is not found');
     }
-  }
-
-
-  ngOnInit(): void {
-
   }
 }
