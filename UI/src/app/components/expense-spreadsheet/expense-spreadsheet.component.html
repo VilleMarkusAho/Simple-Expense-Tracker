@@ -4,7 +4,7 @@
       Currency:&nbsp;&nbsp;&nbsp;
     </label>
 
-    <select [(ngModel)]="finance.currency" class="form-select form-select-sm" id="currency-select">
+    <select [(ngModel)]="finance.currency" (ngModelChange)="finance.triggerExpenseChange()" class="form-select form-select-sm" id="currency-select">
       <option value="$">$ (USD)</option>
       <option value="€">€ (EUR)</option>
       <option value="£">£ (GBP)</option>
