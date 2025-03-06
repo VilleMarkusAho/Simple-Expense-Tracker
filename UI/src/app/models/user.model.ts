@@ -15,10 +15,10 @@ export class UserForm implements IUser {
     }
   }
 
-  username = "";
-  firstName = "";
-  lastName = "";
-  password = "";
-  confirmPassword = "";
-  isNewUser = true;
+  username: string = "";
+  firstName: string = "";
+  lastName: string = "";
+  password: string = "";
+  confirmPassword: string = "";
+  readonly isNewUser: boolean = true;
 }
