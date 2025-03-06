@@ -2,6 +2,8 @@ import { ExpenseCategory } from './../models/expense.model';
 import { Injectable } from '@angular/core';
 import { IExpense } from '../models/expense.model';
 
+export type Currency = "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -9,7 +11,7 @@ export class FinanceService {
 
   constructor() { }
 
-  currency: "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$" = "$";
+  currency: Currency = "$";
   revenue: number = 0;
   expenses: IExpense[] = SAMPLE_EXPENSES;
   totalExpenses: number = this.getTotalExpenses();

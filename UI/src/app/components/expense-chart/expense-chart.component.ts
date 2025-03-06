@@ -2,12 +2,29 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import Chart from 'chart.js/auto';
 import { IExpense } from '../../models/expense.model';
 import { shuffleArray } from '../../utils/helper-functions';
+import { Currency } from '../../services/Finance.service';
 
 const COLORS: string[] = [
-  "#006BFF", "limegreen", "#FF3131", "#AD49E1", "orange",
-  "grey", "orange", "#4477CE", "#00FF9C", "#FF70AB",
-  "#FF5B22", "#493628", "#B2A5FF", "#0D92F4", "#3A7D44",
-  "#F3C623", "#AE431E", "#B3E5BE", "#FE0000", "#77CDFF"
+  "rgb(112, 212, 252)",
+  "rgb(0, 136, 227)",
+  "rgb(75, 194, 168)",
+  "rgb(255, 179, 153)",
+  "rgb(255, 219, 160)",
+  "rgb(143, 122, 219)",
+  "rgb(152, 238, 206)",
+  "rgb(255, 249, 179)",
+  "rgb(196, 175, 148)",
+  "rgb(234, 54, 127)",
+  "rgb(204, 255, 252)",
+  "rgb(255, 132, 83)",
+  "rgb(198, 235, 203)",
+  "rgb(255, 246, 133)",
+  "rgb(255, 147, 54)",
+  "rgb(230, 109, 126)",
+  "rgb(129, 126, 227)",
+  "rgb(94, 69, 75)",
+  "rgb(255, 222, 248)",
+  "rgb(27, 160, 148)",
 ];
 
 @Component({
@@ -22,11 +39,14 @@ export class ExpenseChartComponent implements OnChanges {
 
   @Input() expenses: IExpense[] = [];
   @Input() revenue: number = 0;
+  @Input() unit: Currency = "$";
 
   chart: any;
   expenseMap: Map<string, number[]> = new Map();
 
   createChart() {
+    const unit = this.unit;
+
     this.chart = new Chart("Expenses", {
       type: 'bar',
       data: {
@@ -34,10 +54,14 @@ export class ExpenseChartComponent implements OnChanges {
         datasets: this.getChartDatasets(),
       },
       options: {
-        responsive: true,
+        aspectRatio: 2.5,
         scales: {
-          x: {
-            beginAtZero: true,
+          y: {
+            ticks: {
+              callback: function (value) {
+                return value + " " + unit;
+              },
+            }
           }
         }
       },
@@ -45,7 +69,13 @@ export class ExpenseChartComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    this.createChart();
+    if (!this.chart) {
+      this.createChart();
+    }
+    else {
+      this.chart.data.datasets = this.getChartDatasets();
+      this.chart.update();
+    }
   }
 
   private getChartDatasets(): any[] {
@@ -58,7 +88,7 @@ export class ExpenseChartComponent implements OnChanges {
 
     for (const expense of this.expenses) {
       datasets1.push({
-        label: expense.category.toString(),
+        label: "",
         data: [expense.amount],
         stack: expense.category,
         backgroundColor: colors[colorIndex],
@@ -80,19 +110,25 @@ export class ExpenseChartComponent implements OnChanges {
 
     datasets1 = [...datasets1, ...datasets2];
 
-    datasets1.push({
-      label: "Revenue",
-      data: [this.revenue],
-      stack: "stack2",
-      backgroundColor: colors[0],
-    })
+    if (this.revenue !== 0) {
+      datasets1.push({
+        label: "Revenue",
+        data: [this.revenue],
+        stack: "stack2",
+        backgroundColor: this.revenue > 0 ? "rgb(22, 196, 127)" : "rgb(249, 84, 84)",
+      })
+    }
 
-    datasets1.push({
-      label: "Profit",
-      data: [this.revenue - totalExpenses],
-      stack: "stack3",
-      backgroundColor: colors[0],
-    })
+    const profit = this.revenue - totalExpenses;
+
+    if (profit !== 0) {
+      datasets1.push({
+        label: "Profit",
+        data: [profit],
+        stack: "stack3",
+        backgroundColor: profit > 0 ? "rgb(22, 196, 127)" : "rgb(249, 84, 84)",
+      })
+    }
 
     return datasets1;
   }
