@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import Chart, { plugins } from 'chart.js/auto';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import Chart, { ChartItem, plugins } from 'chart.js/auto';
 import { shuffleArray } from '../../utils/helper-functions';
 import { Currency, FinanceService } from '../../services/Finance.service';
 import { Subscription } from 'rxjs';
@@ -48,13 +48,15 @@ export class ExpenseChartComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   private expenseChangeSub$: Subscription;
+
+  @ViewChild("expenseChart", { static: true }) expenseChart!: ElementRef;
   chart: any;
 
-
   createChart() {
-    this.chart = new Chart("Expenses", {
+    const ctx = (this.expenseChart.nativeElement as HTMLCanvasElement).getContext('2d') as ChartItem;
+
+    this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ["Expenses by category"],

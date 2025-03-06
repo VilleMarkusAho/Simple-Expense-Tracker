@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
@@ -8,6 +8,17 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrl: './download-panel.component.scss',
   standalone: true
 })
-export class DownloadPanelComponent {
+export class DownloadPanelComponent implements OnInit {
+
+
   readonly panelOpenState = signal(false);
+
+  download(format: "csv" | "pdf"): void {
+    // export data in the selected format
+  }
+
+
+  ngOnInit(): void {
+
+  }
 }
