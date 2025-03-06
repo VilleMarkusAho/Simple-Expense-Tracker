@@ -1,6 +1,7 @@
 import { ExpenseCategory } from './../models/expense.model';
 import { Injectable } from '@angular/core';
 import { IExpense } from '../models/expense.model';
+import { debounceTime, Subject } from 'rxjs';
 
 export type Currency = "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$";
 
@@ -10,6 +11,8 @@ export type Currency = "$" | "€" | "£" | "¥" | "CHF" | "C$" | "A$";
 export class FinanceService {
 
   constructor() { }
+
+  private expenseUpdated = new Subject<void>();
 
   currency: Currency = "$";
   revenue: number = 0;
@@ -29,25 +32,39 @@ export class FinanceService {
     this.expenses[index].amount = sum;
     this.totalExpenses = this.totalExpenses - prevAmount + sum;
     this.updateBalance();
+    this.triggerExpenseChange();
   }
 
   removeExpense(index: number): void {
     const expense = this.expenses.splice(index, 1)[0];
     this.totalExpenses -= expense.amount || 0;
     this.updateBalance();
-  }
-
-  getTotalExpenses(): number {
-    return this.expenses.reduce((acc, curr) => acc + curr.amount || 0, 0);
+    this.triggerExpenseChange();
   }
 
   updateRevenue(revenue: number): void {
     this.revenue = revenue || 0;
     this.updateBalance();
+    this.triggerExpenseChange();
   }
 
   updateBalance(): void {
     this.balance = this.revenue - this.totalExpenses;
+  }
+
+  getExpenseChangeListener() {
+    return this.expenseUpdated.asObservable().pipe(
+      // wait for 0.5 second before emitting the latest value (e.g. after user stops typing) to avoid possible performance issues
+      debounceTime(500)
+    );
+  }
+
+  triggerExpenseChange() {
+    this.expenseUpdated.next();
+  }
+
+  private getTotalExpenses(): number {
+    return this.expenses.reduce((acc, curr) => acc + curr.amount || 0, 0);
   }
 }
 

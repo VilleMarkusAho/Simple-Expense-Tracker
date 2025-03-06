@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { IExpense } from '../../models/expense.model';
 import { shuffleArray } from '../../utils/helper-functions';
-import { Currency } from '../../services/Finance.service';
+import { Currency, FinanceService } from '../../services/Finance.service';
+import { Subscription } from 'rxjs';
 
 const COLORS: string[] = [
   "rgb(112, 212, 252)",
@@ -35,14 +35,23 @@ const COLORS: string[] = [
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseChartComponent implements OnChanges {
+export class ExpenseChartComponent implements OnInit, OnDestroy {
 
-  @Input() expenses: IExpense[] = [];
-  @Input() revenue: number = 0;
-  @Input() currency: Currency = "$";
+  constructor(private finance: FinanceService, private cdRef: ChangeDetectorRef) {
+    // Listen for changes in expenses and update the chart
+    this.expenseChangeSub$ = finance.getExpenseChangeListener().subscribe(() => {
+      if (this.chart) {
+        this.chart.data.datasets = this.getChartDatasets();
+        this.chart.options.scales.y.ticks.callback = this.setCurrencyCallback(this.finance.currency);
+        this.chart.update();
+        this.cdRef.detectChanges();
+      }
+    });
+  }
 
+  private expenseChangeSub$: Subscription;
   chart: any;
-  expenseMap: Map<string, number[]> = new Map();
+
 
   createChart() {
     this.chart = new Chart("Expenses", {
@@ -56,7 +65,7 @@ export class ExpenseChartComponent implements OnChanges {
         scales: {
           y: {
             ticks: {
-              callback: this.setCurrencyCallback(this.currency),
+              callback: this.setCurrencyCallback(this.finance.currency),
             }
           }
         }
@@ -64,15 +73,12 @@ export class ExpenseChartComponent implements OnChanges {
     });
   }
 
-  ngOnChanges(): void {
-    if (!this.chart) {
-      this.createChart();
-    }
-    else {
-      this.chart.data.datasets = this.getChartDatasets();
-      this.chart.options.scales.y.ticks.callback = this.setCurrencyCallback(this.currency);
-      this.chart.update();
-    }
+  ngOnInit(): void {
+    this.createChart();
+  }
+
+  ngOnDestroy(): void {
+    this.expenseChangeSub$?.unsubscribe();
   }
 
   private setCurrencyCallback(currency: Currency): (value: string | number) => string {
@@ -89,7 +95,7 @@ export class ExpenseChartComponent implements OnChanges {
     let colorIndex = 0;
     let maxColorIndex = colors.length;
 
-    for (const expense of this.expenses) {
+    for (const expense of this.finance.expenses) {
       datasets1.push({
         label: "",
         data: [expense.amount],
@@ -113,16 +119,16 @@ export class ExpenseChartComponent implements OnChanges {
 
     datasets1 = [...datasets1, ...datasets2];
 
-    if (this.revenue !== 0) {
+    if (this.finance.revenue !== 0) {
       datasets1.push({
         label: "Revenue",
-        data: [this.revenue],
+        data: [this.finance.revenue],
         stack: "stack2",
-        backgroundColor: this.revenue > 0 ? "rgb(22, 196, 127)" : "rgb(249, 84, 84)",
+        backgroundColor: this.finance.revenue > 0 ? "rgb(22, 196, 127)" : "rgb(249, 84, 84)",
       })
     }
 
-    const profit = this.revenue - totalExpenses;
+    const profit = this.finance.revenue - totalExpenses;
 
     if (profit !== 0) {
       datasets1.push({
