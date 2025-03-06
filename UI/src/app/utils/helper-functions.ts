@@ -5,3 +5,7 @@ export function shuffleArray(arr: string[]): string[] {
   }
   return arr;
 }
+
+export function capitilizeFirstLetters(strings: string[]): string[] {
+  return strings.map(str => str.charAt(0).toUpperCase() + str.slice(1));
+}
