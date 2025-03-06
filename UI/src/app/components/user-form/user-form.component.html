@@ -1,1 +1,73 @@
-<p>user-form works!</p>
+<form [formGroup]="editForm" class="form-group">
+  <div>
+    <label for="username">
+      <strong>Username</strong>
+    </label>
+
+    <input
+      type="text"
+      class="form-control mt-1"
+      placeholder="Username"
+      name="username"
+      formControlName="username"
+    >
+  </div>
+
+  <div class="mt-3">
+    <label for="first-name">
+      <strong>First name</strong>
+    </label>
+
+    <input
+      type="text"
+      class="form-control mt-1"
+      placeholder="First name"
+      name="first-name"
+      formControlName="firstName"
+    >
+  </div>
+
+  <div class="mt-3">
+    <label for="last-name">
+      <strong>Last name</strong>
+    </label>
+
+    <input
+      type="text"
+      class="form-control mt-1"
+      placeholder="Last name"
+      name="last-name"
+      formControlName="lastName"
+    >
+  </div>
+
+  <div class="mt-3">
+    <label for="passoword">
+      <strong>Password</strong>
+    </label>
+
+    <input
+      type="password"
+      class="form-control mt-1"
+      placeholder="Password"
+      name="password"
+      formControlName="password"
+    >
+  </div>
+
+  <div class="mt-3">
+    <label for="confirm-password">
+      <strong>
+        Confirm password
+      </strong>
+    </label>
+
+    <input
+      type="password"
+      class="form-control mt-1"
+      placeholder="Confirm password"
+      name="confirm-password"
+      formControlName="confirmPassword"
+    >
+  </div>
+</form>
