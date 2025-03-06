@@ -39,14 +39,12 @@ export class ExpenseChartComponent implements OnChanges {
 
   @Input() expenses: IExpense[] = [];
   @Input() revenue: number = 0;
-  @Input() unit: Currency = "$";
+  @Input() currency: Currency = "$";
 
   chart: any;
   expenseMap: Map<string, number[]> = new Map();
 
   createChart() {
-    const unit = this.unit;
-
     this.chart = new Chart("Expenses", {
       type: 'bar',
       data: {
@@ -58,9 +56,7 @@ export class ExpenseChartComponent implements OnChanges {
         scales: {
           y: {
             ticks: {
-              callback: function (value) {
-                return value + " " + unit;
-              },
+              callback: this.setCurrencyCallback(this.currency),
             }
           }
         }
@@ -74,7 +70,14 @@ export class ExpenseChartComponent implements OnChanges {
     }
     else {
       this.chart.data.datasets = this.getChartDatasets();
+      this.chart.options.scales.y.ticks.callback = this.setCurrencyCallback(this.currency);
       this.chart.update();
+    }
+  }
+
+  private setCurrencyCallback(currency: Currency): (value: string | number) => string {
+    return function (value) {
+      return value + " " + currency;
     }
   }
 
