@@ -47,7 +47,7 @@
         *ngIf="editingRowIndex === i && editingColumnIndex === 0; else categoryTemplate"
       >
         <td>
-          <select [(ngModel)]="expense.category" class="form-select form-select-sm">
+          <select [(ngModel)]="expense.category" (ngModelChange)="finance.triggerExpenseChange()" class="form-select form-select-sm">
             <option *ngFor="let option of categoryOptions" [value]="option">
               {{ option }}
             </option>

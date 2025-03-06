@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import Chart from 'chart.js/auto';
+import Chart, { plugins } from 'chart.js/auto';
 import { shuffleArray } from '../../utils/helper-functions';
 import { Currency, FinanceService } from '../../services/Finance.service';
 import { Subscription } from 'rxjs';
@@ -66,9 +66,19 @@ export class ExpenseChartComponent implements OnInit, OnDestroy {
           y: {
             ticks: {
               callback: this.setCurrencyCallback(this.finance.currency),
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            labels: {
+              filter: (legendItem) => {
+                return legendItem.text !== "";
+              }
             }
           }
         }
+
       },
     });
   }
@@ -97,14 +107,14 @@ export class ExpenseChartComponent implements OnInit, OnDestroy {
 
     for (const expense of this.finance.expenses) {
       datasets1.push({
-        label: "",
+        label: `${expense.category?.toString()} - ${expense.description}`,
         data: [expense.amount],
         stack: expense.category,
         backgroundColor: colors[colorIndex],
       });
 
       datasets2.push({
-        label: expense.category.toString(),
+        label: "",
         data: [expense.amount],
         stack: 'stack1',
         backgroundColor: colors[colorIndex++],
