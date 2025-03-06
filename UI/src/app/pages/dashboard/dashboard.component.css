@@ -3,3 +3,22 @@
   grid-template-columns: 1fr 1fr;
   height: 100%;
 }
+
+.chart-container {
+  margin-left: 3.5rem;
+  margin-right: 10px;
+}
+
+.spreadsheet-wrapper {
+  margin-top: 28px;
+}
+
+.download-panel-wrapper {
+  position: absolute;
+  right: 20px;
+}
+
+.chart-wrapper {
+  margin: 75px 20px 0 0;
+  width: auto;
+}
