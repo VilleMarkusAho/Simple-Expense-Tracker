@@ -8,7 +8,7 @@ export function matchPasswords(control: AbstractControl): ValidationErrors | nul
   const confirmPassword = control.get<string>('confirmPassword')?.value;
 
   // Confirm password is optional, until the password is entered
-  if (confirmPassword && password !== confirmPassword) {
+  if (password && password !== confirmPassword) {
     return { passwordsDoNotMatch: true };
   }
 
@@ -16,7 +16,7 @@ export function matchPasswords(control: AbstractControl): ValidationErrors | nul
 }
 
 export function validatePassword(control: AbstractControl): ValidationErrors | null {
-  const password = control.get<string>('password')?.value;
+  const password = control.value as string;
   let errors: any = {};
 
   // Password is optional, until the password is entered
@@ -41,11 +41,10 @@ export function validatePassword(control: AbstractControl): ValidationErrors | n
 
 export function validateUsernameAsync(profileService: ProfileService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    const user = localStorage.getItem('user') as IUser | null;
-    const usernameInput = control.get<string>('username')?.value;
+    const user = JSON.parse(localStorage.getItem('user') as string) as IUser | null;
+    const usernameInput = control.value as string;
 
-    // If the username is the same as the current user's username, it is valid
-    if (user && user.username === usernameInput) {
+    if (control.pristine) {
       return of(null);
     }
 
@@ -54,14 +53,19 @@ export function validateUsernameAsync(profileService: ProfileService): AsyncVali
       return of({ usernameRequired: true });
     }
 
+    // If the username is the same as the current user's username, it is valid
+    if (user?.username === usernameInput) {
+      return of(null);
+    }
+
+    //console.log('Validating username:', usernameInput);
+
     return of(usernameInput).pipe(
-      debounceTime(1000),
-      switchMap(() => profileService.usernameExists(usernameInput)),
-      map(exists => exists ? { usernameExists: true } : null),
-      catchError((error) => {
-        console.error('Error validating username:', error);
-        return of({ cannotValidateUsername: true });
-      })
+      debounceTime(500),
+      switchMap(username => profileService.usernameExists(username).pipe(
+        map(exists => exists ? { usernameExists: true } : null),
+        catchError(() => of({ cannotValidateUsername: true }))
+      ))
     );
   };
 }

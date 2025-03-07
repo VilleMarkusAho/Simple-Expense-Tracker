@@ -13,7 +13,7 @@ import { ProfileService } from '../../services/profile-service.service';
 })
 export class UserFormComponent implements OnChanges {
 
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService) { }
 
   @Input() user: UserForm = new UserForm();
 
@@ -21,14 +21,14 @@ export class UserFormComponent implements OnChanges {
 
   createForm(): void {
     this.editForm = new FormGroup({
-      username: new FormControl(this.user.username),
+      username: new FormControl(this.user.username, validateUsernameAsync(this.profileService)),
       firstName: new FormControl(this.user.firstName),
       lastName: new FormControl(this.user.lastName),
-      password: new FormControl(""),
+      password: new FormControl("", validatePassword),
       confirmPassword: new FormControl(""),
-    },
-      { validators: [matchPasswords, validatePassword, validateUsernameAsync(this.profileService)] }
-    );
+    }, {
+      validators: [matchPasswords]
+    });
   }
 
   ngOnChanges(): void {
