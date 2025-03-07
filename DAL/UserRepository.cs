@@ -30,9 +30,9 @@ namespace DAL
                 CREATE TABLE IF NOT EXISTS Users (
                     UserId INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Username VARCHAR(20) UNIQUE NOT NULL, 
-                    Password VARCHAR(100) NOT NULL DEFAULT '', 
-                    FirstName TEXT NOT NULL DEFAULT '', 
-                    LastName TEXT NOT NULL DEFAULT ''
+                    Password VARCHAR(36) NOT NULL DEFAULT '', 
+                    FirstName VARCHAR(30) NOT NULL DEFAULT '', 
+                    LastName VARCHAR(30) NOT NULL DEFAULT ''
                 )";
 
             await _connection.ExecuteAsync(query);
