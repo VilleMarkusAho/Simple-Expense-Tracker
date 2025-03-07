@@ -23,8 +23,8 @@ export class UserFormComponent implements OnChanges {
   createForm(): void {
     this.editForm = new FormGroup({
       username: new FormControl(this.user.username, [], [validateUsernameAsync(this.profileService)]),
-      firstName: new FormControl(this.user.firstName),
-      lastName: new FormControl(this.user.lastName),
+      firstName: new FormControl(this.user.firstName, Validators.maxLength(30)),
+      lastName: new FormControl(this.user.lastName, Validators.maxLength(30)),
       password: new FormControl("", validatePassword),
       confirmPassword: new FormControl(""),
     }, {
@@ -34,5 +34,6 @@ export class UserFormComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.createForm();
+    console.log(this.editForm.controls["firstName"].errors);
   }
 }

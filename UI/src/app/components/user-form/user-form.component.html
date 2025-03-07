@@ -46,6 +46,10 @@
       name="first-name"
       formControlName="firstName"
     >
+
+    <small class="text-danger" *ngIf="editForm.controls['firstName']?.hasError('maxlength')">
+      First name needs to be 30 characters or less
+    </small>
   </div>
 
   <div class="mt-3">
@@ -60,6 +64,10 @@
       name="last-name"
       formControlName="lastName"
     >
+
+    <small class="text-danger" *ngIf="editForm.controls['lastName']?.hasError('maxlength')">
+      Last name needs to be 30 characters or less
+    </small>
   </div>
 
   <div class="mt-3">
