@@ -10,6 +10,25 @@
   float: right;
 }
 
+.btn-delete-warning {
+  background-color: inherit;
+  color: crimson !important;
+}
+
+.btn-delete-warning i {
+  color: crimson;
+}
+
+.btn-delete-warning:hover {
+  background-color: crimson !important;
+  color: white !important;
+}
+
+.btn-delete-warning:hover i {
+  color: white;
+}
+
+
 // Customize Angular material styles for the entire app. Change :root to your selector if you want to scope the styles.
 :root {
   @include mat.progress-spinner-overrides((
