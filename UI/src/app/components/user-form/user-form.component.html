@@ -11,6 +11,27 @@
       name="username"
       formControlName="username"
     >
+    <div>
+      <small class="text-danger" *ngIf="editForm.controls['username']?.hasError('usernameTaken')">
+        Username is already taken
+      </small>
+    </div>
+
+    <div>
+      <small class="text-danger" *ngIf="editForm.controls['username']?.hasError('usernameRequired')">
+        Username is required
+      </small>
+    </div>
+
+    <div>
+      <small class="text-danger" *ngIf="editForm.controls['username']?.hasError('usernameTooLong')">
+        Username needs to be 20 characters or less
+      </small>
+    </div>
+
+    <small class="text-danger" *ngIf="editForm.controls['username']?.hasError('cannotValidateUsername')">
+      Error... Please try again later
+    </small>
   </div>
 
   <div class="mt-3">
@@ -56,12 +77,18 @@
     >
 
     <div>
-      <small class="text-danger" *ngIf="editForm.hasError('passwordTooShort')">
+      <small class="text-danger" *ngIf="editForm.controls['password']?.hasError('passwordTooShort')">
         Passwords must be at least 8 characters long
       </small>
     </div>
 
-    <small class="text-danger" *ngIf="editForm.hasError('passwordContainsSpace')">
+    <div>
+      <small class="text-danger" *ngIf="editForm.controls['password']?.hasError('passwordTooLong')">
+        Passwords needs 36 characters or less
+      </small>
+    </div>
+
+    <small class="text-danger" *ngIf="editForm.controls['password']?.hasError('passwordContainsSpace')">
       Passwords cannot contain spaces
     </small>
   </div>

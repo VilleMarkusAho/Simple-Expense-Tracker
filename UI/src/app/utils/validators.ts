@@ -28,6 +28,10 @@ export function validatePassword(control: AbstractControl): ValidationErrors | n
     errors["passwordTooShort"] = true;
   }
 
+  if (password.length > 36) {
+    errors["passwordTooLong"] = true;
+  }
+
   if (password.includes(" ")) {
     errors["passwordContainsSpace"] = true;
   }
@@ -56,6 +60,10 @@ export function validateUsernameAsync(profileService: ProfileService): AsyncVali
     // If the username is the same as the current user's username, it is valid
     if (user?.username === usernameInput) {
       return of(null);
+    }
+
+    if (usernameInput.length > 20) {
+      return of({ usernameTooLong: true });
     }
 
     return timer(500).pipe(
