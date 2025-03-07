@@ -9,7 +9,8 @@ import { ProfileService } from '../../services/profile-service.service';
   selector: 'app-user-form',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.scss'
+  styleUrl: './user-form.component.scss',
+  standalone: true
 })
 export class UserFormComponent implements OnChanges {
 
@@ -21,7 +22,7 @@ export class UserFormComponent implements OnChanges {
 
   createForm(): void {
     this.editForm = new FormGroup({
-      username: new FormControl(this.user.username, validateUsernameAsync(this.profileService)),
+      username: new FormControl(this.user.username, [], [validateUsernameAsync(this.profileService)]),
       firstName: new FormControl(this.user.firstName),
       lastName: new FormControl(this.user.lastName),
       password: new FormControl("", validatePassword),

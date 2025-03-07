@@ -1,6 +1,6 @@
 import { AbstractControl, AsyncValidator, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ProfileService } from '../services/profile-service.service';
-import { catchError, debounce, debounceTime, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, debounce, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, tap, timer } from 'rxjs';
 import { IUser } from '../models/user.model';
 
 export function matchPasswords(control: AbstractControl): ValidationErrors | null {
@@ -58,14 +58,11 @@ export function validateUsernameAsync(profileService: ProfileService): AsyncVali
       return of(null);
     }
 
-    //console.log('Validating username:', usernameInput);
-
-    return of(usernameInput).pipe(
-      debounceTime(500),
-      switchMap(username => profileService.usernameExists(username).pipe(
-        map(exists => exists ? { usernameExists: true } : null),
-        catchError(() => of({ cannotValidateUsername: true }))
-      ))
+    return timer(500).pipe(
+      switchMap(() => profileService.usernameExists(usernameInput)),
+      map(isUserNameTaken => isUserNameTaken ? { usernameTaken: true } : null),
+      catchError(() => of({ cannotValidateUsername: true }))
     );
   };
-}
+};
+
