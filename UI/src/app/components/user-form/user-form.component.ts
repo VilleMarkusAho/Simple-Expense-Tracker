@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { UserForm } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { matchPasswords } from '../../utils/validators';
+import { matchPasswords, validatePassword } from '../../utils/validators';
 
 @Component({
   selector: 'app-user-form',
@@ -23,7 +23,7 @@ export class UserFormComponent implements OnChanges {
       password: new FormControl(""),
       confirmPassword: new FormControl(""),
     },
-      { validators: matchPasswords }
+      { validators: [matchPasswords, validatePassword] }
     );
   }
 
