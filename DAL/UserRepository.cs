@@ -8,6 +8,7 @@ namespace DAL
     public interface IUserRepository : IRepository<User>
     {
         Task<User?> GetUser(string username, string password);
+        Task<User?> GetUser(string username);
     }
 
     public class UserRepository : IUserRepository
@@ -62,6 +63,12 @@ namespace DAL
             user.Password = "";
 
             return user;
+        }
+
+        public async Task<User?> GetUser(string username)
+        {
+            string query = "SELECT * FROM Users WHERE Username = @Username";
+            return await _connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username });
         }
 
         public async Task<User?> GetByIdAsync(int id)

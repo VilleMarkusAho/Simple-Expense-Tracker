@@ -2,7 +2,8 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { UserForm } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { matchPasswords, validatePassword } from '../../utils/validators';
+import { matchPasswords, validatePassword, validateUsernameAsync } from '../../utils/validators';
+import { ProfileService } from '../../services/profile-service.service';
 
 @Component({
   selector: 'app-user-form',
@@ -11,19 +12,22 @@ import { matchPasswords, validatePassword } from '../../utils/validators';
   styleUrl: './user-form.component.scss'
 })
 export class UserFormComponent implements OnChanges {
+
+  constructor(private profileService: ProfileService) {}
+
   @Input() user: UserForm = new UserForm();
 
   editForm!: FormGroup;
 
   createForm(): void {
     this.editForm = new FormGroup({
-      username: new FormControl(this.user.username, Validators.required),
+      username: new FormControl(this.user.username),
       firstName: new FormControl(this.user.firstName),
       lastName: new FormControl(this.user.lastName),
       password: new FormControl(""),
       confirmPassword: new FormControl(""),
     },
-      { validators: [matchPasswords, validatePassword] }
+      { validators: [matchPasswords, validatePassword, validateUsernameAsync(this.profileService)] }
     );
   }
 

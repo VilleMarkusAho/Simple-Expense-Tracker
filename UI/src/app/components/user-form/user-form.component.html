@@ -54,6 +54,16 @@
       autocomplete="new-password"
       formControlName="password"
     >
+
+    <div>
+      <small class="text-danger" *ngIf="editForm.hasError('passwordTooShort')">
+        Passwords must be at least 8 characters long
+      </small>
+    </div>
+
+    <small class="text-danger" *ngIf="editForm.hasError('passwordContainsSpace')">
+      Passwords cannot contain spaces
+    </small>
   </div>
 
   <div class="mt-3">
@@ -71,7 +81,7 @@
       autocomplete="new-password"
       formControlName="confirmPassword"
     >
-    <small class="text-danger">
+    <small class="text-danger" *ngIf="editForm.hasError('passwordsDoNotMatch')">
       Passwords do not match
     </small>
   </div>
