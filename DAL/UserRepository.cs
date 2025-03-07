@@ -49,7 +49,7 @@ namespace DAL
 
         public async Task<User?> GetUser(string username, string password) 
         {
-            string query = "SELECT UserId, Username, FirstName, LastName FROM Users WHERE Username = @Username";
+            string query = "SELECT * FROM Users WHERE Username = @Username";
 
             var user = await _connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username });
 
@@ -59,7 +59,7 @@ namespace DAL
                 return null;
             }
 
-            // Double check that the password is not returned in the response
+            // Ensure that the password is not returned for security reasons
             user.Password = "";
 
             return user;
@@ -73,6 +73,7 @@ namespace DAL
             
             if (user != null)
             {
+                // Double check that the password is not returned for security reasons
                 user.Password = "";
             }
 
@@ -100,7 +101,7 @@ namespace DAL
             int userId = await _connection.ExecuteScalarAsync<int>(query, entity);
 
             entity.UserId = userId;
-            entity.Password = ""; // Clear the password for security reasons
+            entity.Password = "";
             return entity;
         }
 

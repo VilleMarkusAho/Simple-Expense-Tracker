@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { matchPasswords, validatePassword, validateUsernameAsync } from '../../utils/validators';
 import { ProfileService } from '../../services/profile-service.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteProfileDialogComponent } from '../delete-profile-dialog/delete-profile-dialog.component';
 
 @Component({
   selector: 'app-user-form',
@@ -14,7 +17,11 @@ import { ProfileService } from '../../services/profile-service.service';
 })
 export class UserFormComponent implements OnChanges {
 
-  constructor(private profileService: ProfileService) { }
+  constructor(
+    private profileService: ProfileService,
+    private router: Router,
+    private dialog: MatDialog
+  ) { }
 
   @Input() user: UserForm = new UserForm();
 
@@ -22,7 +29,20 @@ export class UserFormComponent implements OnChanges {
   waitingResponse: boolean = false;
 
   submit(): void {
+    if (this.editForm.invalid) {
+      console.log("Invalid form");
+      return;
+    }
 
+    if (this.user.isNewUser) {
+      this.createUser();
+    } else {
+      this.updateUser();
+    }
+  }
+
+  openDeleteDialog(): void {
+    this.dialog.open(DeleteProfileDialogComponent);
   }
 
   createForm(): void {
@@ -41,5 +61,35 @@ export class UserFormComponent implements OnChanges {
     this.createForm();
   }
 
+  private createUser(): void {
+    this.waitingResponse = true;
+    this.profileService.createUser(this.editForm.value).subscribe({
+      next: () => {
+        this.waitingResponse = false;
+        alert("User created successfully");
+        this.router.navigate(["/login"]);
+      },
+      error: error => {
+        this.waitingResponse = false;
+        console.error(error);
+        alert("Failed to create user");
+      }
+    });
+  };
 
+  private updateUser(): void {
+    this.waitingResponse = true;
+    this.profileService.updateUser(this.editForm.value).subscribe({
+      next: () => {
+        this.waitingResponse = false;
+        alert("User updated successfully");
+        this.router.navigate(["/dashboard"]);
+      },
+      error: error => {
+        this.waitingResponse = false;
+        console.error(error);
+        alert("Failed to update user");
+      }
+    });
+  }
 }

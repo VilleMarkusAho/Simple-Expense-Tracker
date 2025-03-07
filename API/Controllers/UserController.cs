@@ -21,8 +21,8 @@ namespace API.Controllers
             try
             {
                 // TODO: Add validation for user object
-                var createdUser = await _userRepository.AddAsync(request);
-                return Ok(createdUser);
+                await _userRepository.AddAsync(request);
+                return Ok();
             }
             catch
             {
@@ -35,7 +35,7 @@ namespace API.Controllers
         {
             try
             {
-                // TODO: Add validation for user object
+                // TODO: Add validation for user object and remember create new jwt token
                 //await _userRepository.AddAsync(request);
                 return Ok();
             }
