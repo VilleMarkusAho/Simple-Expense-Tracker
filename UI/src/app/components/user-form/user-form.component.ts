@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { UserForm } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { matchPasswords } from '../../utils/validators';
 
 @Component({
   selector: 'app-user-form',
@@ -14,13 +15,19 @@ export class UserFormComponent implements OnChanges {
 
   editForm!: FormGroup;
 
-  ngOnChanges(): void {
+  createForm(): void {
     this.editForm = new FormGroup({
       username: new FormControl(this.user.username, Validators.required),
       firstName: new FormControl(this.user.firstName),
       lastName: new FormControl(this.user.lastName),
-      password: new FormControl(this.user.password, Validators.required),
-      confirmPassword: new FormControl(this.user.confirmPassword, Validators.required)
-    });
+      password: new FormControl(""),
+      confirmPassword: new FormControl(""),
+    },
+      { validators: matchPasswords }
+    );
+  }
+
+  ngOnChanges(): void {
+    this.createForm();
   }
 }

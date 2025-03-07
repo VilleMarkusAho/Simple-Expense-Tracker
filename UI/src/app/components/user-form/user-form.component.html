@@ -43,7 +43,7 @@
 
   <div class="mt-3">
     <label for="passoword">
-      <strong>Password</strong>
+      <strong>Password (Optional)</strong>
     </label>
 
     <input
@@ -51,12 +51,13 @@
       class="form-control mt-1"
       placeholder="Password"
       name="password"
+      autocomplete="new-password"
       formControlName="password"
     >
   </div>
 
   <div class="mt-3">
-    <label for="confirm-password">
+    <label for="confirmPassword">
       <strong>
         Confirm password
       </strong>
@@ -67,6 +68,7 @@
       class="form-control mt-1"
       placeholder="Confirm password"
       name="confirm-password"
+      autocomplete="new-password"
       formControlName="confirmPassword"
     >
   </div>
@@ -74,7 +76,7 @@
 
 <div class="row mt-4">
   <div clasS="col">
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" [disabled]="editForm.invalid">
       <i class="fa-solid fa-save"></i>
       Save
     </button>
