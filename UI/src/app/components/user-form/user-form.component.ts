@@ -19,6 +19,11 @@ export class UserFormComponent implements OnChanges {
   @Input() user: UserForm = new UserForm();
 
   editForm!: FormGroup;
+  waitingResponse: boolean = false;
+
+  submit(): void {
+
+  }
 
   createForm(): void {
     this.editForm = new FormGroup({
@@ -34,6 +39,7 @@ export class UserFormComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.createForm();
-    console.log(this.editForm.controls["firstName"].errors);
   }
+
+
 }
