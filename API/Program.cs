@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Text;
 using Business;
+using FluentValidation;
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,10 +67,15 @@ sqliteConnection.Open();
 builder.Services.AddSingleton<IDbConnection>(sqliteConnection);
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
+// Register scoped application services
+builder.Services.AddScoped<IJWTokenService, JWTokenService>();
+
+// Register helpers as transient services
 builder.Services.AddTransient<IUserHelper, UserHelper>();
 
-// Register application services
-builder.Services.AddScoped<IJWTokenService, JWTokenService>();
+// Register validators
+builder.Services.AddTransient<IValidator<CreateUserForm>, CreateUserValidator>();
+builder.Services.AddTransient<IValidator<UpdateUserForm>, UpdateUserFormValidator>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
