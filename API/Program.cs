@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // Register Fluent validators
-builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserFormValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserFormValidator>();
 
 // Initialize In-Memory Database Connection

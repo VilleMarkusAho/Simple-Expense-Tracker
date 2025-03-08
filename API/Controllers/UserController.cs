@@ -19,7 +19,6 @@ namespace API.Controllers
         private readonly IValidator<CreateUserForm> _createUserFormValidator;
         private readonly IValidator<UpdateUserForm> _updateUserFormValidator;
 
-
         public UserController(
             IUserRepository userRepository,
             IUserHelper userHelper,
@@ -112,7 +111,7 @@ namespace API.Controllers
             {
                 LoginUser? user = _userHelper.GetLoginUser(User);
 
-                if (user == null)
+                if (user == null || user.UserId == null)
                 {
                     return Unauthorized();
                 }

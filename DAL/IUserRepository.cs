@@ -15,6 +15,6 @@ namespace DAL
         Task<User?> GetAsync(string username);
         Task<User> CreateAsync(CreateUserForm form);
         Task<User> UpdateAsync(UpdateUserForm form);
-        Task<bool> DeleteAsync(int userId);
+        Task<bool> DeleteAsync(int? userId);
     }
 }

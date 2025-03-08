@@ -131,7 +131,7 @@ namespace DAL
             return updatedEntity;
         }
 
-        public async Task<bool> DeleteAsync(int userId)
+        public async Task<bool> DeleteAsync(int? userId)
         {
             string query = "DELETE FROM Users WHERE UserId = @userId";
 

@@ -4,9 +4,9 @@ using Models;
 
 namespace Business
 {
-    public class CreateUserValidator : AbstractValidator<CreateUserForm>
+    public class CreateUserFormValidator : AbstractValidator<CreateUserForm>
     {
-        public CreateUserValidator(IUserRepository userRepository)
+        public CreateUserFormValidator(IUserRepository userRepository)
         {
             RuleFor(x => x.Username)
                 .NotEmpty()
