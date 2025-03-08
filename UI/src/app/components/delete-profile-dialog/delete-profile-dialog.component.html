@@ -1,8 +1,18 @@
-<h2 mat-dialog-title>Dialog Title</h2>
+<h3 id="title" class="text-danger">Warning!</h3>
 <mat-dialog-content>
-  <p>This is the content of the dialog!</p>
+  <p id="content-text">
+    Are you sure you want to delete your profile? <br />
+    <strong>This action cannot be undone</strong>
+  </p>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="close()">Close</button>
-  <button mat-button [mat-dialog-close]="true">Accept</button>
+<br />
+<mat-dialog-actions align="start" class="d-flex justify-content-between">
+  <button class="btn btn-danger float-left">
+    <i class="fa-solid fa-trash"></i>
+    Delete
+  </button>
+  <button class="btn btn-light" (click)="close()">
+    <i class="fa-solid fa-times"></i>
+    Close
+  </button>
 </mat-dialog-actions>

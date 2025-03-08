@@ -5,11 +5,6 @@ using Models;
 
 namespace DAL
 {
-    public interface IUserRepository : IRepository<User>
-    {
-        Task<User?> GetUser(string username, string password);
-        Task<User?> GetUser(string username);
-    }
 
     public class UserRepository : IUserRepository
     {
@@ -105,9 +100,11 @@ namespace DAL
             return entity;
         }
 
-        public Task<User> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM Users WHERE UserId = @id";
+
+            return await _connection.ExecuteAsync(query, new { id }) > 0;
         }
        
         public Task<User> UpdateAsync(User entity)

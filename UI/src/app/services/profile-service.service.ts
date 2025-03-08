@@ -21,4 +21,8 @@ export class ProfileService {
   updateUser(user: UserForm): Observable<IUser> {
     return this.http.put<IUser>('user', user);
   }
+
+  deleteUser(): Observable<void> {
+    return this.http.delete<void>('user');
+  }
 }
