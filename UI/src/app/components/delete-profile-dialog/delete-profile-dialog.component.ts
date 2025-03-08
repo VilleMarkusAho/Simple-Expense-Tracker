@@ -3,12 +3,13 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ProfileService } from '../../services/profile-service.service';
 import { AuthService } from '../../services/AuthService.service';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-delete-profile-dialog',
   templateUrl: './delete-profile-dialog.component.html',
   styleUrls: ['./delete-profile-dialog.component.css'],
-  imports: [MatDialogModule, CommonModule],
+  imports: [CommonModule, MatDialogModule, MatProgressSpinnerModule],
   standalone: true
 })
 export class DeleteProfileDialogComponent {
