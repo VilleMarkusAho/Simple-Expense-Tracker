@@ -109,7 +109,8 @@ namespace DAL
        
         public Task<User> UpdateAsync(User entity)
         {
-            throw new NotImplementedException();
+            
+           
         }
     }
 }

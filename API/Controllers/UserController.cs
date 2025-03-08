@@ -63,17 +63,23 @@ namespace API.Controllers
                     return Unauthorized();
                 }
 
-                await _userRepository.DeleteAsync(user.UserId);
+                bool result = await _userRepository.DeleteAsync(user.UserId);
 
+                if (result)
+                {
+                    return Ok();
+                }
+                
+                return NotFound();
             }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-            
 
-                [HttpGet("exists/{username}")]
+
+        [HttpGet("exists/{username}")]
         public async Task<IActionResult> UserExists(string username)
         {
             try
