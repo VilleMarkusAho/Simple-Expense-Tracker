@@ -36,7 +36,7 @@
 
   <div class="mt-3">
     <label for="first-name">
-      <strong>First name</strong>
+      <strong>First name (Optional)</strong>
     </label>
 
     <input
@@ -54,7 +54,7 @@
 
   <div class="mt-3">
     <label for="last-name">
-      <strong>Last name</strong>
+      <strong>Last name (Optional)</strong>
     </label>
 
     <input
@@ -72,7 +72,9 @@
 
   <div class="mt-3">
     <label for="passoword">
-      <strong>Password (Optional)</strong>
+      <strong>
+        Password <span *ngIf="!user.isNewUser">(Optional)</span>
+      </strong>
     </label>
 
     <input
@@ -140,7 +142,7 @@
   </div>
 
 
-  <div class="col">
+  <div class="col" *ngIf="!user.isNewUser">
     <button class="btn btn-delete-warning float-right" (click)="openDeleteDialog()">
       <i class="fa-solid fa-trash"></i>
       Delete

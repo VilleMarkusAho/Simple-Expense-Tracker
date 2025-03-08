@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserForm } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
@@ -17,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrl: './user-form.component.scss',
   standalone: true
 })
-export class UserFormComponent implements OnChanges {
+export class UserFormComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
@@ -61,7 +61,7 @@ export class UserFormComponent implements OnChanges {
     });
   }
 
-  ngOnChanges(): void {
+  ngOnInit(): void {
     this.createForm();
   }
 
@@ -83,8 +83,6 @@ export class UserFormComponent implements OnChanges {
 
   private updateUser(): void {
     this.waitingResponse = true;
-
-
 
     this.profileService.updateUser(this.editForm.value).subscribe({
       next: response => {
