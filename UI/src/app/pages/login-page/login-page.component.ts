@@ -26,7 +26,6 @@ export class LoginPageComponent {
   username: string = environment.username || "";
   password: string = environment.password || "";
 
-  errorMessage: string = "";
   waitingResponse: boolean = false;
 
   login(): void {
@@ -38,9 +37,9 @@ export class LoginPageComponent {
         this.localStorage.setItem(LocalStorageKey.USER, response.result);
         this.router.navigate(["/dashboard"]);
       },
-      error: error => {
+      error: err => {
         this.waitingResponse = false
-        this.errorMessage = error.message;
+        alert("Error: " + err.error?.message || err.message);
       }
     });
   }

@@ -54,7 +54,7 @@ namespace API.Controllers
 
                 if (user == null)
                 {
-                    return Unauthorized();
+                    return Unauthorized(new { message = "Invalid credentials" });
                 }
 
                 var token = _jwtService.GenerateJwtToken(user);
