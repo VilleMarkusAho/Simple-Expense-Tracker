@@ -1,0 +1,28 @@
+<h3 id="title" class="text-danger">Warning!</h3>
+<mat-dialog-content>
+  <p id="content-text">
+    Are you sure you want to delete your profile? <br />
+    <strong>This action cannot be undone</strong>
+  </p>
+</mat-dialog-content>
+<br />
+<mat-dialog-actions align="start" class="d-flex justify-content-between">
+  <button class="btn btn-danger float-left" (click)="deleteProfile()" [disabled]="waitingResponse">
+    <mat-spinner
+      *ngIf="waitingResponse; else elseBlock"
+      diameter="18"
+      mode="indeterminate"
+    ></mat-spinner>
+
+    <ng-template #elseBlock>
+      <i class="fa-solid fa-trash"></i>
+    </ng-template>
+
+
+    <span>{{ waitingResponse ? 'Deleting' : 'Delete' }}</span>
+  </button>
+  <button class="btn btn-light" (click)="close()">
+    <i class="fa-solid fa-times"></i>
+    Close
+  </button>
+</mat-dialog-actions>

@@ -7,14 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
-    public class LoginRequest
-    {
-        [Required]
-        public required string Username { get; set; }
-
-        [Required]
-        public required string Password { get; set; }
-    }
 
     [Produces("application/json")]
     [Route("api")]
@@ -50,11 +42,21 @@ namespace API.Controllers
                     }
                 }
 
-                var user = await _userRepository.GetUser(request.Username, request.Password);
+                if (string.IsNullOrWhiteSpace(request?.Username))
+                {
+                    return BadRequest(new { message = "Username is required" });
+                }
+
+                if (string.IsNullOrWhiteSpace(request?.Password))
+                {
+                    return BadRequest(new { message = "Password is required" });
+                }
+
+                var user = await _userRepository.GetAsync(request.Username, request.Password);
 
                 if (user == null)
                 {
-                    return Unauthorized();
+                    return Unauthorized(new { message = "Invalid credentials" });
                 }
 
                 var token = _jwtService.GenerateJwtToken(user);

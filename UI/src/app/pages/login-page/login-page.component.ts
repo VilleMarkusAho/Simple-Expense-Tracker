@@ -4,14 +4,14 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/AuthService.service';
 import { environment } from '../../../environments/environment.development';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css'],
-  imports: [CommonModule, FormsModule, MatProgressSpinnerModule],
+  imports: [CommonModule, FormsModule, MatProgressSpinnerModule, RouterModule],
   providers: [AuthService],
   standalone: true
 })
@@ -26,7 +26,6 @@ export class LoginPageComponent {
   username: string = environment.username || "";
   password: string = environment.password || "";
 
-  errorMessage: string = "";
   waitingResponse: boolean = false;
 
   login(): void {
@@ -38,9 +37,9 @@ export class LoginPageComponent {
         this.localStorage.setItem(LocalStorageKey.USER, response.result);
         this.router.navigate(["/dashboard"]);
       },
-      error: error => {
+      error: err => {
         this.waitingResponse = false
-        this.errorMessage = error.message;
+        alert("Error: " + err.error?.message || err.message);
       }
     });
   }

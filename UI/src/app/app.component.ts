@@ -13,7 +13,7 @@ export class AppComponent {
 
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
-      this.showHeader = !['/login'].includes(this.router.url);
+      this.showHeader = !['/login', '/profile/create'].includes(this.router.url);
     });
   }
 

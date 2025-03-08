@@ -5,10 +5,6 @@ using Models;
 
 namespace DAL
 {
-    public interface IUserRepository : IRepository<User>
-    {
-        Task<User?> GetUser(string username, string password);
-    }
 
     public class UserRepository : IUserRepository
     {
@@ -29,24 +25,25 @@ namespace DAL
                 CREATE TABLE IF NOT EXISTS Users (
                     UserId INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Username VARCHAR(20) UNIQUE NOT NULL, 
-                    Password VARCHAR(100) NOT NULL DEFAULT '', 
-                    FirstName TEXT NOT NULL DEFAULT '', 
-                    LastName TEXT NOT NULL DEFAULT ''
+                    Password VARCHAR(36) NOT NULL, 
+                    FirstName VARCHAR(30) NOT NULL DEFAULT '', 
+                    LastName VARCHAR(30) NOT NULL DEFAULT '',
+                    CHECK(Password != '')
                 )";
 
             await _connection.ExecuteAsync(query);
 
-            var defaultUser = _configuration.GetSection("EXAMPLE_USER").Get<User>();
+            var defaultUser = _configuration.GetSection("EXAMPLE_USER").Get<CreateUserForm>();
 
             if (defaultUser == null)
             {
                 throw new Exception("No default user found in configuration");
             }
 
-            await AddAsync(defaultUser);
+            await CreateAsync(defaultUser);
         }
 
-        public async Task<User?> GetUser(string username, string password) 
+        public async Task<User?> GetAsync(string username, string password) 
         {
             string query = "SELECT * FROM Users WHERE Username = @Username";
 
@@ -58,20 +55,35 @@ namespace DAL
                 return null;
             }
 
-            // Return the user without the password for security reasons
+            // Ensure that the password is not returned for security reasons
             user.Password = "";
 
             return user;
         }
 
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetAsync(string username)
         {
-            string query = "SELECT UserId, Username, FirstName, LastName FROM Users WHERE UserId = @id";
+            string query = "SELECT UserId, Username, FirstName, LastName FROM Users WHERE Username = @Username";
 
-            return await _connection.QueryFirstOrDefaultAsync<User>(query, new { id });
+            var user = await _connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username });
+            
+            if (user != null)
+            {
+                // Double check that the password is not returned for security reasons
+                user.Password = "";
+            }
+
+            return user;
         }
 
-        public async Task<User?> AddAsync(User entity)
+        public async Task<User?> GetAsync(int userId)
+        {
+            string query = "SELECT UserId, Username, FirstName, LastName FROM Users WHERE UserId = @userId";
+
+            return await _connection.QueryFirstOrDefaultAsync<User>(query, new { userId });
+        }
+
+        public async Task<User> CreateAsync(CreateUserForm form)
         {
             string query = @"
                 INSERT INTO Users (Username, Password, FirstName, LastName) 
@@ -80,22 +92,50 @@ namespace DAL
 
             // Hash the password before storing it for security
             // Using 13 as the work factor is a good balance between security and performance
-            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, _defaultWorkFactor);
+            form.Password = BCrypt.Net.BCrypt.HashPassword(form.Password, _defaultWorkFactor);
 
-            int userId = await _connection.ExecuteScalarAsync<int>(query, entity);
+            int userId = await _connection.ExecuteScalarAsync<int>(query, form);
 
-            entity.UserId = userId;
-            return entity;
+            return new User
+            {
+                UserId = userId,
+                Username = form.Username,
+                FirstName = form.FirstName,
+                LastName = form.LastName,
+            };
         }
 
-        public Task<User> DeleteAsync(int id)
+        public async Task<User> UpdateAsync(UpdateUserForm form)
         {
-            throw new NotImplementedException();
+            string query = @"
+                UPDATE Users 
+                SET Username = @Username, Password = @Password, FirstName = @FirstName, LastName = @LastName
+                WHERE UserId = @UserId;
+                SELECT UserId, Username, FirstName, LastName FROM Users WHERE UserId = @UserId;";
+
+
+            if (string.IsNullOrWhiteSpace(form.Password) == false)
+            {
+                form.Password = BCrypt.Net.BCrypt.HashPassword(form.Password, _defaultWorkFactor);
+            }
+            else
+            {
+                // If the password is not provided, we should not update it
+                query = query.Replace("Password = @Password,", "");
+            }
+
+            var updatedEntity = await _connection.QueryFirstOrDefaultAsync<User>(query, form)
+                ?? throw new ArgumentException("No user found with the given id");
+
+            updatedEntity.Password = "";
+            return updatedEntity;
         }
-       
-        public Task<User> UpdateAsync(User entity)
+
+        public async Task<bool> DeleteAsync(int? userId)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM Users WHERE UserId = @userId";
+
+            return await _connection.ExecuteAsync(query, new { userId }) > 0;
         }
     }
 }
