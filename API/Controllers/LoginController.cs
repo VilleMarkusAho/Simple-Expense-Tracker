@@ -7,14 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
-    public class LoginRequest
-    {
-        [Required]
-        public required string Username { get; set; }
-
-        [Required]
-        public required string Password { get; set; }
-    }
 
     [Produces("application/json")]
     [Route("api")]
