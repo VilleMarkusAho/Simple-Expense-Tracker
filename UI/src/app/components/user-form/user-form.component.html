@@ -1,3 +1,9 @@
+<h3 class="mb-4">
+  <strong>
+    {{ user.isNewUser ? 'Create an account' : 'Edit profile' }}
+  </strong>
+</h3>
+
 <form [formGroup]="editForm" class="form-group">
   <div>
     <label for="username">
