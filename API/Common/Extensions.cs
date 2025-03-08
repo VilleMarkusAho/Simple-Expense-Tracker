@@ -14,7 +14,10 @@ namespace API.Common
 
             if (!result.IsValid)
             {
-                                
+                foreach (var error in result.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
             }
 
             return result.IsValid;

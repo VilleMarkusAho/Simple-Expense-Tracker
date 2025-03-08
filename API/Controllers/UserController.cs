@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using FluentValidation;
+using API.Common;
 
 namespace API.Controllers
 {
@@ -40,6 +41,17 @@ namespace API.Controllers
         {
             try
             {
+                if (request == null)
+                {
+                    return BadRequest(new { message = "Request body is required" });
+                }
+
+                if (_createUserFormValidator.Validate(request, out var errors) == false)
+                {
+                    return BadRequest(new { message = "Invalid request", errors });
+                }
+
+
                 // TODO: Add validation for user object
                 await _userRepository.AddAsync(request);
                 return Ok(new { message = "User profile created successfully" });
