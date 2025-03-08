@@ -3,6 +3,7 @@ using DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using FluentValidation;
 
 namespace API.Controllers
 {
@@ -14,12 +15,23 @@ namespace API.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IUserHelper _userHelper;
         private readonly IJWTokenService _jWTokenService;
+        private readonly IValidator<CreateUserForm> _createUserFormValidator;
+        private readonly IValidator<UpdateUserForm> _updateUserFormValidator;
 
-        public UserController(IUserRepository userRepository, IUserHelper userHelper, IJWTokenService jWTokenService) 
+
+        public UserController(
+            IUserRepository userRepository,
+            IUserHelper userHelper,
+            IJWTokenService jWTokenService,
+            IValidator<CreateUserForm> createUserFormValidator,
+            IValidator<UpdateUserForm> updateUserFormValidator
+        )
         {
             _userRepository = userRepository;
             _userHelper = userHelper;
             _jWTokenService = jWTokenService;
+            _createUserFormValidator = createUserFormValidator;
+            _updateUserFormValidator = updateUserFormValidator;
         }
 
         [AllowAnonymous]
