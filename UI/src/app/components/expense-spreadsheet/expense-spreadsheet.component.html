@@ -43,6 +43,7 @@
         <i class="fa-solid fa-trash-can cursor-pointer" (click)="removeRow(i)"></i>
       </td>
 
+      <!-- Category -->
       <ng-container
         *ngIf="editingRowIndex === i && editingColumnIndex === 0; else categoryTemplate"
       >
@@ -61,6 +62,7 @@
         </td>
       </ng-template>
 
+      <!-- Description -->
       <ng-container
         *ngIf="editingRowIndex === i && editingColumnIndex === 1; else descriptionTemplate"
       >
@@ -70,6 +72,7 @@
             type="text"
             [attr.size]="expense.description.length || 1"
             [(ngModel)]="expense.description"
+            (ngModelChange)="finance.triggerExpenseChange()"
           >
         </td>
       </ng-container>
@@ -80,6 +83,7 @@
         </td>
       </ng-template>
 
+      <!-- Amount -->
       <ng-container
         *ngIf="editingRowIndex === i && editingColumnIndex === 2; else amountTemplate"
       >
