@@ -106,11 +106,25 @@ namespace DAL
 
             return await _connection.ExecuteAsync(query, new { id }) > 0;
         }
-       
-        public Task<User> UpdateAsync(User entity)
+
+        public async Task<User> UpdateAsync(User entity)
         {
-            
-           
+            string query = @"
+                UPDATE Users 
+                SET Username = @Username, Password = @Password, FirstName = @FirstName, LastName = @LastName
+                WHERE UserId = @UserId";
+
+            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, _defaultWorkFactor);
+
+            int affectedRows = await _connection.ExecuteAsync(query, entity);
+
+            if (affectedRows == 0)
+            {
+                throw new Exception("No user found with the given id");
+            }
+
+            entity.Password = "";
+            return entity;
         }
     }
 }
