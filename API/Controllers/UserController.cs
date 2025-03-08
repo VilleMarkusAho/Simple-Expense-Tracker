@@ -22,6 +22,7 @@ namespace API.Controllers
             _jWTokenService = jWTokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] User request)
         {
@@ -29,7 +30,7 @@ namespace API.Controllers
             {
                 // TODO: Add validation for user object
                 await _userRepository.AddAsync(request);
-                return Ok();
+                return Ok(new { message = "User profile created successfully" });
             }
             catch
             {
@@ -42,12 +43,22 @@ namespace API.Controllers
         {
             try
             {
-                // TODO: Add validation for user object and remember create new jwt token
                 var updatedUser = await _userRepository.UpdateAsync(request);
                 var token = _jWTokenService.GenerateJwtToken(updatedUser);
 
+                Response.Cookies.Append("access_token", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = false, // Use secure in production (HTTPS required)
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddMinutes(_jWTokenService.TokenExpiryMinutes)
+                });
 
-                return Ok();
+                return Ok(new
+                {
+                    message = "User profile updated successfully",
+                    result = updatedUser
+                });
             }
             catch
             {
@@ -72,17 +83,16 @@ namespace API.Controllers
 
                 if (result)
                 {
-                    return Ok();
+                    return Ok(new { message = "User profile deleted successfully"});
                 }
                 
-                return NotFound();
+                return NotFound(new { message = "User not found" });
             }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
 
         [HttpGet("exists/{username}")]
         public async Task<IActionResult> UserExists(string username)

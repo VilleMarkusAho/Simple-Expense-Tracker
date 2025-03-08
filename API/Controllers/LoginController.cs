@@ -50,7 +50,7 @@ namespace API.Controllers
                     }
                 }
 
-                var user = await _userRepository.GetUser(request.Username, request.Password);
+                var user = await _userRepository.GetUserAsync(request.Username, request.Password);
 
                 if (user == null)
                 {
