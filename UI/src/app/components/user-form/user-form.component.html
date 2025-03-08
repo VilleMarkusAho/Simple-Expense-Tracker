@@ -87,6 +87,12 @@
     >
 
     <div>
+      <small class="text-danger" *ngIf="editForm.controls['password']?.hasError('required')">
+        Password is required
+      </small>
+    </div>
+
+    <div>
       <small class="text-danger" *ngIf="editForm.controls['password']?.hasError('passwordTooShort')">
         Passwords must be at least 8 characters long
       </small>

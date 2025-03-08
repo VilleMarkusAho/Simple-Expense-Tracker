@@ -98,6 +98,7 @@ namespace API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("exists/{username}")]
         public async Task<IActionResult> UserExists(string username)
         {

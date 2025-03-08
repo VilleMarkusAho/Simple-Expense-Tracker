@@ -59,6 +59,11 @@ export class UserFormComponent implements OnInit {
     }, {
       validators: [matchPasswords]
     });
+
+    // If the user is new set the password field to required
+    if (this.user.isNewUser) {
+      this.editForm.get("password")?.setValidators([Validators.required, validatePassword]);
+    }
   }
 
   ngOnInit(): void {
