@@ -124,8 +124,17 @@
 
 <div class="row mt-4">
   <div clasS="col">
-    <button class="btn btn-primary" [disabled]="editForm.invalid">
-      <i class="fa-solid fa-save"></i>
+    <button class="btn btn-primary" [disabled]="editForm.invalid || editForm.pristine" (click)="submit()">
+      <mat-spinner
+        *ngIf="waitingResponse; else elseBlock"
+        diameter="18"
+        mode="indeterminate"
+      ></mat-spinner>
+
+      <ng-template #elseBlock>
+        <i class="fa-solid fa-save"></i>
+      </ng-template>
+
       Save
     </button>
   </div>

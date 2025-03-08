@@ -18,8 +18,8 @@ export class ProfileService {
     return this.http.post<IUser>('user', user);
   }
 
-  updateUser(user: UserForm): Observable<IUser> {
-    return this.http.put<IUser>('user', user);
+  updateUser(user: UserForm): Observable<{ message: string, result: IUser }> {
+    return this.http.put<any>('user', user);
   }
 
   deleteUser(): Observable<void> {

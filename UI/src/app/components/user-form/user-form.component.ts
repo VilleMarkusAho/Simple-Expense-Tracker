@@ -7,10 +7,12 @@ import { ProfileService } from '../../services/profile-service.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteProfileDialogComponent } from '../delete-profile-dialog/delete-profile-dialog.component';
+import { LocalStorageKey, LocalStorageService } from '../../services/LocalStorage.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-user-form',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatProgressSpinnerModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss',
   standalone: true
@@ -19,6 +21,7 @@ export class UserFormComponent implements OnChanges {
 
   constructor(
     private profileService: ProfileService,
+    private localStorage: LocalStorageService,
     private router: Router,
     private dialog: MatDialog
   ) { }
@@ -30,7 +33,7 @@ export class UserFormComponent implements OnChanges {
 
   submit(): void {
     if (this.editForm.invalid) {
-      console.log("Invalid form");
+      console.error("Invalid form");
       return;
     }
 
@@ -47,6 +50,7 @@ export class UserFormComponent implements OnChanges {
 
   createForm(): void {
     this.editForm = new FormGroup({
+      userId: new FormControl(this.user.userId),
       username: new FormControl(this.user.username, [], [validateUsernameAsync(this.profileService)]),
       firstName: new FormControl(this.user.firstName, Validators.maxLength(30)),
       lastName: new FormControl(this.user.lastName, Validators.maxLength(30)),
@@ -79,16 +83,20 @@ export class UserFormComponent implements OnChanges {
 
   private updateUser(): void {
     this.waitingResponse = true;
+
+
+
     this.profileService.updateUser(this.editForm.value).subscribe({
-      next: () => {
+      next: response => {
         this.waitingResponse = false;
-        alert("User updated successfully");
+        this.localStorage.setItem(LocalStorageKey.USER, response.result);
+        alert(response.message);
         this.router.navigate(["/dashboard"]);
       },
-      error: error => {
+      error: err => {
         this.waitingResponse = false;
-        console.error(error);
-        alert("Failed to update user");
+        console.error(err);
+        alert(err.error?.message || "Failed to update user");
       }
     });
   }

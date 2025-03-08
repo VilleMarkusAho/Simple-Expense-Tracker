@@ -25,9 +25,10 @@ namespace DAL
                 CREATE TABLE IF NOT EXISTS Users (
                     UserId INTEGER PRIMARY KEY AUTOINCREMENT, 
                     Username VARCHAR(20) UNIQUE NOT NULL, 
-                    Password VARCHAR(36) NOT NULL DEFAULT '', 
+                    Password VARCHAR(36) NOT NULL, 
                     FirstName VARCHAR(30) NOT NULL DEFAULT '', 
-                    LastName VARCHAR(30) NOT NULL DEFAULT ''
+                    LastName VARCHAR(30) NOT NULL DEFAULT '',
+                    CHECK(Password != '')
                 )";
 
             await _connection.ExecuteAsync(query);
@@ -112,18 +113,19 @@ namespace DAL
             string query = @"
                 UPDATE Users 
                 SET Username = @Username, Password = @Password, FirstName = @FirstName, LastName = @LastName
-                WHERE UserId = @UserId";
+                WHERE UserId = @UserId;
+                SELECT UserId, Username, FirstName, LastName FROM Users WHERE UserId = @UserId;";
 
-            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, _defaultWorkFactor);
 
-            int affectedRows = await _connection.ExecuteAsync(query, entity);
-
-            if (affectedRows == 0)
+            if (string.IsNullOrWhiteSpace(entity.Password) == false)
             {
-                throw new Exception("No user found with the given id");
+                entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, _defaultWorkFactor);
             }
 
-            entity.Password = "";
+            var updatedEntity  = await _connection.QueryFirstOrDefaultAsync<User>(query, entity) 
+                ?? throw new ArgumentException("No user found with the given id");
+
+            updatedEntity.Password = "";
             return entity;
         }
     }

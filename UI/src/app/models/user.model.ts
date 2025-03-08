@@ -13,7 +13,7 @@ export class UserForm implements IUser {
       this.isNewUser = false;
     }
   }
-
+  userId?: number;
   username: string = "";
   firstName: string = "";
   lastName: string = "";

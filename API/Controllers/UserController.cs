@@ -60,6 +60,10 @@ namespace API.Controllers
                     result = updatedUser
                 });
             }
+            catch (ArgumentException)
+            {
+                return NotFound(new { message = "User not found" });
+            }
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
