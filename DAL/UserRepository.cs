@@ -121,8 +121,13 @@ namespace DAL
             {
                 entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password, _defaultWorkFactor);
             }
+            else
+            {
+                // If the password is not provided, we should not update it
+                query = query.Replace("Password = @Password,", "");
+            }
 
-            var updatedEntity  = await _connection.QueryFirstOrDefaultAsync<User>(query, entity) 
+            var updatedEntity = await _connection.QueryFirstOrDefaultAsync<User>(query, entity)
                 ?? throw new ArgumentException("No user found with the given id");
 
             updatedEntity.Password = "";

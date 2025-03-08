@@ -90,8 +90,12 @@ export class UserFormComponent implements OnChanges {
       next: response => {
         this.waitingResponse = false;
         this.localStorage.setItem(LocalStorageKey.USER, response.result);
+
         alert(response.message);
-        this.router.navigate(["/dashboard"]);
+
+        this.router.navigate(["/dashboard"]).then(() => {
+          window.location.reload();
+        });
       },
       error: err => {
         this.waitingResponse = false;
