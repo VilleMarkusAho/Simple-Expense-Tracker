@@ -7,9 +7,9 @@
 </mat-dialog-content>
 <br />
 <mat-dialog-actions align="start" class="d-flex justify-content-between">
-  <button class="btn btn-danger float-left">
-    <i class="fa-solid fa-trash"></i>
-    Delete
+  <button class="btn btn-danger float-left" (click)="deleteProfile()" [disabled]="waitingResponse">
+    <i [ngClass]="waitingResponse ? 'fa-light fa-circle-notch' : 'fa-solid fa-trash'"></i>
+    {{ waitingResponse ? 'Deleting...' : 'Delete' }}
   </button>
   <button class="btn btn-light" (click)="close()">
     <i class="fa-solid fa-times"></i>
