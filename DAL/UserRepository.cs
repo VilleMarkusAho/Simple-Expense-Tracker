@@ -42,7 +42,7 @@ namespace DAL
             await AddAsync(defaultUser);
         }
 
-        public async Task<User?> GetUser(string username, string password) 
+        public async Task<User?> GetUserAsync(string username, string password) 
         {
             string query = "SELECT * FROM Users WHERE Username = @Username";
 
@@ -60,7 +60,7 @@ namespace DAL
             return user;
         }
 
-        public async Task<User?> GetUser(string username)
+        public async Task<User?> GetUserAsync(string username)
         {
             string query = "SELECT UserId, Username, FirstName, LastName FROM Users WHERE Username = @Username";
 

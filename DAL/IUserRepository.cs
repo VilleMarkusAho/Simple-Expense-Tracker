@@ -9,7 +9,7 @@ namespace DAL
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<User?> GetUser(string username, string password);
-        Task<User?> GetUser(string username);
+        Task<User?> GetUserAsync(string username, string password);
+        Task<User?> GetUserAsync(string username);
     }
 }

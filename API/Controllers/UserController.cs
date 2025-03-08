@@ -43,7 +43,10 @@ namespace API.Controllers
             try
             {
                 // TODO: Add validation for user object and remember create new jwt token
-                //await _userRepository.AddAsync(request);
+                var updatedUser = await _userRepository.UpdateAsync(request);
+                var token = _jWTokenService.GenerateJwtToken(updatedUser);
+
+
                 return Ok();
             }
             catch
@@ -86,7 +89,7 @@ namespace API.Controllers
         {
             try
             {
-                var user = await _userRepository.GetUser(username);
+                var user = await _userRepository.GetUserAsync(username);
                 return Ok(user != null);
             }
             catch
