@@ -12,12 +12,15 @@ namespace Business
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Username is required")
-                .MaximumLength(20).WithMessage("Username cannot be longer than 20 characters")
+                .MaximumLength(20)
+                .WithMessage("Username cannot be longer than 20 characters");
+            RuleFor(x => x.Username)
                 .MustAsync(async (username, cancellationToken) =>
                 {
-                    return await userRepository.GetUserAsync(username) == null;
+                    return await userRepository.GetUserAsync(username ?? "") == null;
                 })
-                .WithMessage("Username already exists");
+                .WithMessage("Username already exists")
+                .When(x => string.IsNullOrWhiteSpace(x.Username) == false && x.Username.Length <= 20); // Only validate if username is provided and is less than or equal to 20 characters
             RuleFor(x => x.FirstName)
                 .NotNull()
                 .WithMessage("First name cannot be null")
@@ -29,13 +32,11 @@ namespace Business
                 .MaximumLength(30)
                 .WithMessage("Last name cannot be longer than 30 characters");
             RuleFor(x => x.Password)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("Password is required")
                 .MaximumLength(36)
                 .WithMessage("Password cannot be longer than 30 characters");
             RuleFor(x => x.ConfirmPassword).Equal(x => x.Password)
-                .WithMessage("Passwords do not match");
+                .WithMessage("Passwords do not match")
+                .When(x => string.IsNullOrWhiteSpace(x.Password) == false); // Only validate if password is provided
         }
     }
 }
