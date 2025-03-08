@@ -59,6 +59,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// Register Fluent validators
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateUserFormValidator>();
+
 // Initialize In-Memory Database Connection
 var sqliteConnection = new SqliteConnection("DataSource=:memory:");
 sqliteConnection.Open();
@@ -72,10 +76,6 @@ builder.Services.AddScoped<IJWTokenService, JWTokenService>();
 
 // Register helpers as transient services
 builder.Services.AddTransient<IUserHelper, UserHelper>();
-
-// Register validators
-builder.Services.AddTransient<IValidator<CreateUserForm>, CreateUserValidator>();
-builder.Services.AddTransient<IValidator<UpdateUserForm>, UpdateUserFormValidator>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
