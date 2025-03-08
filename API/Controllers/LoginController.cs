@@ -42,7 +42,17 @@ namespace API.Controllers
                     }
                 }
 
-                var user = await _userRepository.GetUserAsync(request.Username, request.Password);
+                if (string.IsNullOrWhiteSpace(request?.Username))
+                {
+                    return BadRequest(new { message = "Username is required" });
+                }
+
+                if (string.IsNullOrWhiteSpace(request?.Password))
+                {
+                    return BadRequest(new { message = "Password is required" });
+                }
+
+                var user = await _userRepository.GetAsync(request.Username, request.Password);
 
                 if (user == null)
                 {

@@ -16,6 +16,6 @@ namespace Models
 
     public class User : LoginUser
     {
-        public required string Password { get; set; }
+        public string? Password { get; set; }
     }    
 }

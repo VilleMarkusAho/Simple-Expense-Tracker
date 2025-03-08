@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using FluentValidation;
-using API.Common;
+using static API.Common.Extensions;
 
 namespace API.Controllers
 {
@@ -37,7 +37,7 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] User request)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserForm request)
         {
             try
             {
@@ -46,15 +46,14 @@ namespace API.Controllers
                     return BadRequest(new { message = "Request body is required" });
                 }
 
-                if (_createUserFormValidator.Validate(request, out var errors) == false)
-                {
-                    return BadRequest(new { message = "Invalid request", errors });
-                }
+                await _createUserFormValidator.ValidateAndThrowAsync(request);
+                await _userRepository.CreateAsync(request);
 
-
-                // TODO: Add validation for user object
-                await _userRepository.AddAsync(request);
                 return Ok(new { message = "User profile created successfully" });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Errors });
             }
             catch
             {
@@ -63,10 +62,17 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromBody] User request)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserForm request)
         {
             try
             {
+                if (request == null)
+                {
+                    return BadRequest(new { message = "Request body is required" });
+                }
+
+                await _updateUserFormValidator.ValidateAndThrowAsync(request);
+
                 var updatedUser = await _userRepository.UpdateAsync(request);
                 var token = _jWTokenService.GenerateJwtToken(updatedUser);
 
@@ -83,6 +89,11 @@ namespace API.Controllers
                     message = "User profile updated successfully",
                     result = updatedUser
                 });
+
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Errors });
             }
             catch (ArgumentException)
             {
@@ -92,7 +103,6 @@ namespace API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
         }
 
         [HttpDelete]
@@ -128,7 +138,7 @@ namespace API.Controllers
         {
             try
             {
-                var user = await _userRepository.GetUserAsync(username);
+                var user = await _userRepository.GetAsync(username);
                 return Ok(user != null);
             }
             catch

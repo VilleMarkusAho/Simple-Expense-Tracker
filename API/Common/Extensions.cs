@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using FluentValidation;
+﻿using FluentValidation;
 
 
 namespace API.Common
 {
     public static class Extensions
     {
-
         public static bool Validate<T>(this IValidator<T> validator, T entity, out List<string> errors)
         {
             errors = [];    
