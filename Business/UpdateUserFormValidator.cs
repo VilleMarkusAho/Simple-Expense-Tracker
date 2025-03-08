@@ -14,10 +14,24 @@ namespace Business
                 .WithMessage("Username is required")
                 .MaximumLength(20)
                 .WithMessage("Username cannot be longer than 20 characters");
-            RuleFor(x => x.Username)
-                .MustAsync(async (username, cancellationToken) =>
+            RuleFor(x => x)
+                .MustAsync(async (form, cancellationToken) =>
                 {
-                    return await userRepository.GetAsync(username ?? "") == null;
+                    var user = await userRepository.GetAsync(form.Username ?? "");
+
+                    // If the user does not exist, then the username is available
+                    if (user == null)
+                    {
+                        return true;
+                    }
+
+                    // If the user exists and the user id matches the form user id, then the username is available
+                    if (user.UserId == form.UserId)
+                    {
+                        return true;
+                    }
+
+                    return false;
                 })
                 .WithMessage("Username already exists")
                 .When(x => string.IsNullOrWhiteSpace(x.Username) == false && x.Username.Length <= 20); // Only validate if username is provided and is less than or equal to 20 characters

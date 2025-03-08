@@ -93,7 +93,7 @@ namespace API.Controllers
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new { message = ex.Errors });
+                return BadRequest(new { message = string.Join('\n', ex.Errors.Select(x => x.ErrorMessage)) });
             }
             catch (ArgumentException)
             {
