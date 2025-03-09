@@ -1,4 +1,4 @@
-Simple Expense Tracker
+#Simple Expense Tracker
 Overview
 
 Simple Expense Tracker is a Single Page Application (SPA) built using Angular for the front-end and ASP.NET Web API for the back-end. The app allows users to manage their personal finances by tracking their expenses in a simple, spreadsheet-like interface. It also provides visualizations of expenses through a bar chart.
