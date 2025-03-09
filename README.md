@@ -18,20 +18,20 @@ Simple Expense Tracker is a Single Page Application (SPA) built using Angular fo
  * Charting: Chart.js library
  * Database: SQLite (In-memory database)
 
-### Features
+## Features
 
-#### Expense Management:
+### Expense Management:
 
   Users can plan their expenses by adding data in a spreadsheet-like table.
   Input categories such as category, description and amount for each expense.
   The entered expenses are visualized.
 
-#### Visualizations:
+### Visualizations:
 
   A bar chart is generated to visualize the expenses.
   The chart dynamically updates as the user enters new data.
 
-#### User Authentication:
+### User Authentication:
 
   Login: Users can log in using their credentials.
   Registration: Users can create a new account.
@@ -43,6 +43,6 @@ Simple Expense Tracker is a Single Page Application (SPA) built using Angular fo
   JWT tokens are used to authenticate users.
   HttpOnly cookies store JWT tokens for secure session management, preventing XSS attacks.
 
-### Screenshots
+### Screenshots:
 
 (Include the relevant screenshots of your app's UI here.)
