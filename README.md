@@ -48,14 +48,10 @@ Simple Expense Tracker is a Single Page Application (SPA) built using Angular fo
 Dashboard
 ![Dashboard](./Images/Dashboard.png)
 
-Edit profile page  
+Edit profile page and profile deletion confirm popup 
 ![Edit account page](./Images/Edit-profile-form.png)
 
-
-
-Profile deletion confirm popup
 ![Confirm account deletion dialog](./Images/Profile-delete-confirm-dialog.png)
-
   
 Login page
 ![Login page](./Images/Login-page.png)
