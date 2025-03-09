@@ -44,18 +44,15 @@ Simple Expense Tracker is a Single Page Application (SPA) built using Angular fo
   HttpOnly cookies store JWT tokens for secure session management, preventing XSS attacks.
 
 ### Screenshots:
+
+Dashboard
 ![Dashboard](./Images/Dashboard.png)
 
-  Dashboard
-  
+Edit profile page  
 ![Edit account page](./Images/Edit-profile-form.png)
 
-  Edit profile page
-  
+Profile deletion confirm popup
 ![Confirm account deletion dialog](./Images/Profile-delete-confirm-dialog.png)
-
-  Profile deletion confirm popup
   
+Login page
 ![Login page](./Images/Login-page.png)
-
-  Login page
